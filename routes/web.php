@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PublicController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserDesainController;
 
@@ -10,6 +11,11 @@ use App\Http\Controllers\UserDesainController;
 Route::get('/', function () {
     return view('index'); 
 })->name('home');
+
+Route::get('/tentang', [PublicController::class, 'tentang'])->name('tentang');
+Route::get('/syarat-ketentuan', [PublicController::class, 'SyaratKetentuan'])->name('syarat-ketentuan');
+Route::get('/keamanan-privasi', [PublicController::class, 'KeamananPrivasi'])->name('keamanan-privasi');
+Route::get('/faq', [PublicController::class, 'faq'])->name('faq');
 
 // Middleware Guest (Belum Login)
 Route::middleware('guest')->group(function () {

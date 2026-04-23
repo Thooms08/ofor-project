@@ -4,10 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="OFOR.SITE - Platform pembuatan kartu digital interaktif, praktis, dan desain fleksibel.">
-    <title>@yield('title', 'OFFOR.SITE - Kartu Digital Interaktif')</title>
+    <meta name="keywords" content="@yield('meta_keywords', 'kartu digital, pembuat kartu online, ofor.site')">
+    <title>@yield('title', 'OFOR.SITE - Kartu Digital Interaktif')</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="@yield('title', 'OFOR.SITE - Kartu Digital Interaktif')">
+    <meta property="og:description" content="@yield('meta_description', 'OFOR.SITE - Platform pembuatan kartu digital interaktif, praktis, dan desain fleksibel.')">
+    <meta property="og:image" content="{{ asset('logo-ofor.jpg') }}">
+    <meta property="og:image:width" content="1280">
+    <meta property="og:image:height" content="1280">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="{{ url()->current() }}">
+    <meta name="twitter:title" content="@yield('title', 'OFOR.SITE - Kartu Digital Interaktif')">
+    <meta name="twitter:description" content="@yield('meta_description', 'OFOR.SITE - Platform pembuatan kartu digital interaktif, praktis, dan desain fleksibel.')">
+    <meta name="twitter:image" content="{{ asset('logo-ofor.jpg') }}">
+
+    <link rel="icon" type="image/jpeg" href="{{ asset('logo-ofor.jpg') }}">
+<link rel="apple-touch-icon" href="{{ asset('logo-ofor.jpg') }}">
 
     <style>
         :root {
@@ -20,6 +38,9 @@
             font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             color: #333;
             background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Memastikan footer selalu di bawah */
         }
 
         /* Color Helpers */
@@ -115,6 +136,7 @@
         }
         footer a:hover {
             color: white;
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -123,7 +145,7 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top py-3">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="{{ url('/') }}">
-                <i class="bi bi-layers-fill me-2"></i> OFOR.SITE
+                <img src="{{ asset('logo-no-bg.png') }}" alt="Logo OFOR.SITE" height="50" class="me-2"> OFOR.SITE
             </a>
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -132,16 +154,19 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto mb-2 mb-lg-0 text-center">
                     <li class="nav-item">
-                        <a class="nav-link active" href="{{ url('/') }}">Home</a>
+                        <a class="nav-link {{ request()->is('/') ? 'active' : '' }}" href="{{ url('/') }}">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#fitur">Fitur</a>
+                        <a class="nav-link" href="{{ url('/') }}#fitur">Fitur</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#harga">Harga</a>
+                        <a class="nav-link" href="{{ url('/') }}#harga">Harga</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#kontak">Kontak</a>
+                        <a class="nav-link {{ request()->routeIs('tentang') ? 'active' : '' }}" href="{{ route('tentang') }}">Tentang</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url('/') }}#kontak">Kontak</a>
                     </li>
                 </ul>
             <div class="d-flex flex-column flex-lg-row align-items-center gap-2 mt-3 mt-lg-0">
@@ -164,18 +189,31 @@
         </div>
     </nav>
 
-    <main>
+    <main class="flex-grow-1">
         @yield('content')
     </main>
 
     <footer class="py-4 mt-auto">
         <div class="container text-center text-md-start">
             <div class="row align-items-center">
-                <div class="col-md-6 mb-3 mb-md-0">
-                    <h5 class="fw-bold mb-1"><i class="bi bi-layers-fill me-2"></i>OFOR.SITE</h5>
+                <div class="col-lg-4 col-md-12 mb-3 mb-lg-0 text-center text-lg-start">
+                   <h5 class="fw-bold mb-1">
+                        <img src="{{ asset('logo-no-bg.png') }}" alt="Logo OFOR.SITE" height="50" class="me-2"> OFOR.SITE
+                    </h5>
                     <p class="mb-0 text-white-50 small">Platform pembuat kartu digital interaktif terbaik.</p>
                 </div>
-                <div class="col-md-6 text-md-end">
+                
+                <div class="col-lg-4 col-md-12 mb-3 mb-lg-0 text-center">
+                    <div class="d-flex justify-content-center flex-wrap gap-3 small">
+                        <a href="{{ route('syarat-ketentuan') }}">Syarat & Ketentuan</a>
+                        <span class="text-white-50 d-none d-md-inline">|</span>
+                        <a href="{{ route('keamanan-privasi') }}">Keamanan & Privasi</a>
+                        <span class="text-white-50 d-none d-md-inline">|</span>
+                        <a href="{{ route('faq') }}">FAQ</a>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-12 text-center text-lg-end">
                     <p class="mb-0 small text-white-50">
                         &copy; {{ date('Y') }} OFOR.SITE. All rights reserved.
                     </p>

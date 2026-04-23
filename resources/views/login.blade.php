@@ -13,7 +13,7 @@
                 <div class="card-body p-4 p-md-5 bg-white">
                     <div class="text-center mb-4">
                         <h2 class="fw-bold text-purple mb-2">Masuk ke Akun</h2>
-                        <p class="text-muted small">Selamat datang kembali! Silakan masuk untuk membuat kartu.</p>
+                        <p class="text-muted small">Selamat datang kembali! Silakan masuk untuk membuat kartu digital Mu Bro!.</p>
                     </div>
 
                     @if($errors->any())
@@ -39,14 +39,22 @@
                             </div>
                         </div>
 
-                        <div class="mb-4">
+                        <div class="mb-3">
                             <label for="password" class="form-label fw-medium text-secondary small">Password</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light border-end-0">
                                     <i class="bi bi-lock text-muted"></i>
                                 </span>
-                                <input type="password" class="form-control form-control-lg bg-light border-start-0 rounded-end-3" id="password" name="password" placeholder="Masukkan password" required>
+                                <input type="password" class="form-control form-control-lg bg-light border-start-0 border-end-0" id="password" name="password" placeholder="Masukkan password" required>
+                                <button class="btn btn-light bg-light border border-start-0 rounded-end-3" type="button" id="togglePassword">
+                                    <i class="bi bi-eye-slash text-muted" id="toggleIcon"></i>
+                                </button>
                             </div>
+                        </div>
+
+                        <div class="mb-4 form-check">
+                            <input type="checkbox" class="form-check-input border-secondary" id="remember" name="remember" {{ old('remember') ? 'checked' : '' }}>
+                            <label class="form-check-label text-muted small" for="remember">Ingat Saya</label>
                         </div>
 
                         <div class="d-grid gap-2 mb-3">
@@ -84,4 +92,27 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const togglePassword = document.getElementById('togglePassword');
+        const password = document.getElementById('password');
+        const toggleIcon = document.getElementById('toggleIcon');
+
+        togglePassword.addEventListener('click', function () {
+            // Cek tipe input saat ini
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            
+            // Ganti Ikon (bi-eye / bi-eye-slash)
+            if (type === 'text') {
+                toggleIcon.classList.remove('bi-eye-slash');
+                toggleIcon.classList.add('bi-eye');
+            } else {
+                toggleIcon.classList.remove('bi-eye');
+                toggleIcon.classList.add('bi-eye-slash');
+            }
+        });
+    });
+</script>
 @endsection

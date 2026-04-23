@@ -34,8 +34,11 @@ class AuthController extends Controller
             'password.required' => 'Password wajib diisi.',
         ]);
 
-        // Cek autentikasi
-        if (Auth::attempt($credentials)) {
+        // Cek apakah user mencentang checkbox 'Ingat Saya'
+        $remember = $request->has('remember');
+
+        // Cek autentikasi dengan mengirimkan parameter $remember
+        if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
             return redirect()->intended(route('user.dashboard'));
         }
