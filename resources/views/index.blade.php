@@ -1,146 +1,359 @@
 @extends('layouts.app')
 
-@section('title', 'Beranda | OFFOR.SITE')
+@section('title', 'Ofor.site - Platform Pembuatan Kartu Digital Interaktif')
+@section('meta_description', 'Ofor.site adalah platform digital inovatif untuk membuat kartu digital interaktif dan kartu ucapan digital tanpa batas dengan desain fleksibel.')
+@section('meta_keywords', 'kartu digital, kartu ucapan digital, platform kartu online, kartu digital interaktif')
 
 @section('content')
 
-<section class="py-5 bg-light-purple position-relative overflow-hidden">
-    <div class="container py-5">
-        <div class="row align-items-center g-5">
-            <div class="col-lg-6 order-2 order-lg-1 text-center text-lg-start">
-                <span class="badge bg-purple text-white rounded-pill px-3 py-2 mb-3">#1 Digital Card Builder</span>
-                <h1 class="display-4 fw-bold mb-3 text-dark">
-                    Bikin Momen Lebih Berkesan dengan <span class="text-purple">Kartu Digital Interaktif</span>
-                </h1>
-                <p class="lead text-muted mb-4">
-                    OFFOR.SITE adalah platform pembuatan kartu digital interaktif. Hanya dengan <strong>Rp15.000 (sekali bayar)</strong>, kamu bisa membuat karya yang personal dan unik!
-                </p>
-                
-                <ul class="list-unstyled text-start d-inline-block d-lg-block mb-4">
-                    <li class="mb-2"><i class="bi bi-check-circle-fill text-purple me-2"></i> Custom background (gambar atau warna)</li>
-                    <li class="mb-2"><i class="bi bi-check-circle-fill text-purple me-2"></i> Pilihan berbagai jenis font estetik</li>
-                    <li class="mb-2"><i class="bi bi-check-circle-fill text-purple me-2"></i> Bebas isi teks, gambar, hingga pesan suara!</li>
-                </ul>
+<style>
+    /* Styling Khusus Index/Homepage */
+    :root {
+        --dark-purple: #581c87;
+        --primary-purple: #7e22ce;
+        --light-purple: #f3e8ff;
+    }
 
-                <div>
-                    <a href="{{route('register')}}" class="btn btn-purple btn-lg w-100 w-sm-auto mb-3 mb-sm-0 me-sm-2 shadow-sm">
-                        Buat Kartu Sekarang <i class="bi bi-arrow-right ms-2"></i>
-                    </a>
+    /* Hero Section Baru: Grid Layout, bukan Overlay */
+    .hero-carousel {
+        background: linear-gradient(135deg, var(--dark-purple) 0%, #3b0764 100%);
+        position: relative;
+    }
+    
+    .hero-slide-container {
+        min-height: 85vh;
+        display: flex;
+        align-items: center;
+        padding-top: 80px; /* Jarak untuk navbar */
+        padding-bottom: 60px;
+    }
+
+    .hero-gif {
+        width: 100%;
+        max-height: 480px;
+        object-fit: cover;
+        border-radius: 1.5rem;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        border: 4px solid rgba(255, 255, 255, 0.1);
+        transition: transform 0.4s ease;
+    }
+
+    .hero-gif:hover {
+        transform: translateY(-10px);
+    }
+
+    .carousel-indicators {
+        margin-bottom: 1.5rem;
+    }
+
+    .carousel-indicators [data-bs-target] {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.5);
+        border: none;
+        margin: 0 6px;
+    }
+
+    .carousel-indicators .active {
+        background-color: white;
+        transform: scale(1.2);
+    }
+    
+    /* Modern Cards */
+    .modern-card {
+        border-radius: 1.25rem;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(0,0,0,0.05) !important;
+    }
+    .modern-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 1rem 3rem rgba(126, 34, 206, 0.12) !important;
+        border-color: var(--light-purple) !important;
+    }
+    .icon-wrapper {
+        width: 64px;
+        height: 64px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 16px;
+        font-size: 1.75rem;
+    }
+    
+    /* Premium Card Outline */
+    .premium-card {
+        border: 2px solid var(--primary-purple) !important;
+        position: relative;
+    }
+    .premium-badge {
+        position: absolute;
+        top: -16px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #ffc107;
+        color: #000;
+        font-weight: 800;
+        letter-spacing: 1px;
+        padding: 6px 24px;
+        border-radius: 30px;
+        box-shadow: 0 4px 15px rgba(255, 193, 7, 0.5);
+        z-index: 2;
+    }
+    
+    /* Utility Colors */
+    .text-purple { color: var(--primary-purple) !important; }
+    .bg-purple { background-color: var(--primary-purple) !important; }
+    .bg-light-purple { background-color: var(--light-purple) !important; }
+</style>
+
+<header id="heroCarousel" class="carousel slide carousel-fade hero-carousel" data-bs-ride="carousel" data-bs-interval="10000">
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+    </div>
+
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <div class="container hero-slide-container">
+                <div class="row align-items-center w-100 g-5">
+                    <div class="col-lg-6 text-center text-lg-start z-1">
+                        <span class="badge bg-white text-purple px-3 py-2 rounded-pill mb-4 shadow-sm fw-bold tracking-wide">
+                            <i class="bi bi-stars me-1"></i> #1 Platform Kartu Online
+                        </span>
+                        <h1 class="display-4 fw-bold text-white mb-4 lh-sm">
+                            Buat Kartu Digital <br class="d-none d-lg-block"> Interaktif Tanpa Batas
+                        </h1>
+                        <p class="lead text-white-50 mb-5 fw-normal" style="line-height: 1.8;">
+                            Ofor.site adalah platform digital inovatif yang memungkinkan Anda untuk membuat kartu digital kreatif tanpa batas (unlimited) dengan mudah, cepat, dan fleksibel.
+                        </p>
+                        <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center justify-content-lg-start">
+                            <a href="{{ route('register') }}" class="btn btn-light btn-lg text-purple fw-bold rounded-3 px-4 shadow py-3">Mulai Sekarang</a>
+                            <a href="#fitur" class="btn btn-outline-light btn-lg fw-bold rounded-3 px-4 py-3">Lihat Fitur</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 text-center z-1">
+                        <img src="{{ asset('assets/gif/gif1.gif') }}" class="hero-gif" alt="Kartu Digital Interaktif" onerror="this.src='https://via.placeholder.com/600x480/7e22ce/ffffff?text=Ofor.site';">
+                    </div>
                 </div>
             </div>
-            <div class="col-lg-6 order-1 order-lg-2 text-center">
-                <div class="bg-white p-4 rounded-4 shadow-lg mx-auto" style="max-width: 350px; border: 1px solid var(--light-purple);">
-                    <div class="bg-light-purple rounded-3 p-3 mb-3" style="height: 180px; display:flex; align-items:center; justify-content:center;">
-                        <i class="bi bi-image text-purple" style="font-size: 3rem;"></i>
+        </div>
+
+        <div class="carousel-item">
+            <div class="container hero-slide-container">
+                <div class="row align-items-center w-100 g-5">
+                    <div class="col-lg-6 text-center text-lg-start z-1">
+                        <span class="badge bg-white text-purple px-3 py-2 rounded-pill mb-4 shadow-sm fw-bold tracking-wide">
+                            <i class="bi bi-heart-fill me-1 text-danger"></i> Unik & Personal
+                        </span>
+                        <h2 class="display-4 fw-bold text-white mb-4 lh-sm">
+                            Ciptakan Pengalaman <br class="d-none d-lg-block"> Digital Berbeda
+                        </h2>
+                        <p class="lead text-white-50 mb-5 fw-normal" style="line-height: 1.8;">
+                            Sampaikan pesan secara unik, personal, dan lebih berkesan dibandingkan kartu konvensional. Cocok untuk semua momen berharga Anda.
+                        </p>
+                        <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center justify-content-lg-start">
+                            <a href="{{ route('register') }}" class="btn btn-primary btn-lg text-white fw-bold rounded-3 px-4 shadow py-3" style="background-color: #9333ea; border:none;">Buat Kartumu Sekarang</a>
+                        </div>
                     </div>
-                    <h5 class="fw-bold mb-2">Happy Birthday! 🎉</h5>
-                    <p class="text-muted small mb-3">Semoga harimu menyenangkan dan selalu diberikan kebahagiaan.</p>
-                    <div class="d-flex align-items-center justify-content-between p-2 bg-light rounded">
-                        <span class="small text-muted"><i class="bi bi-play-circle-fill text-purple me-1"></i> Pesan Suara</span>
-                        <span class="badge bg-purple">0:30</span>
+                    <div class="col-lg-6 text-center z-1">
+                        <img src="{{ asset('assets/gif/gif2.gif') }}" class="hero-gif" alt="Kartu Ucapan Digital" onerror="this.src='https://via.placeholder.com/600x480/7e22ce/ffffff?text=Ofor.site';">
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<section class="py-5 bg-white">
+    <div class="container py-5">
+        <div class="row align-items-center justify-content-center text-center">
+            <div class="col-lg-8 col-md-10">
+                <span class="text-purple fw-bold mb-2 d-block text-uppercase tracking-wide small">Tentang Ofor.site</span>
+                <h2 class="fw-bold mb-4 text-dark display-6">Lebih Dari Sekadar Kartu Biasa</h2>
+                <p class="text-secondary fs-5 mb-4" style="line-height: 1.8;">
+                    Ofor.site adalah platform digital inovatif yang memungkinkan Anda untuk membuat <strong>kartu digital kreatif</strong> tanpa batas (unlimited) dengan mudah, cepat, dan fleksibel.
+                </p>
+                <div class="alert bg-light-purple border-0 rounded-4 p-4 mt-5 shadow-sm text-start text-md-center">
+                    <p class="mb-0 text-dark fw-medium fs-5">
+                        <i class="bi bi-quote text-purple fs-2 me-1"></i> Dengan Ofor.site, Anda tidak hanya membuat kartu biasa—Anda dapat menciptakan pengalaman digital yang interaktif.
+                    </p>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<section id="fitur" class="py-5 bg-white">
+<section id="fitur" class="py-5 bg-light">
     <div class="container py-5">
-        <div class="row justify-content-center text-center mb-5">
-            <div class="col-lg-8">
-                <h2 class="fw-bold mb-3">Satu Kartu, Beragam Kebutuhan!</h2>
-                <p class="lead text-muted">
-                    Bagikan kartumu dengan super gampang. Bisa lewat <strong>QR Code</strong>, atau pakai link unik khusus buat kamu, contohnya: <span class="text-purple fw-bold bg-light-purple px-2 py-1 rounded">offor.site/nama-kartu</span>.
-                </p>
-            </div>
+        <div class="text-center mb-5 pb-3">
+            <span class="text-purple fw-bold mb-2 d-block text-uppercase tracking-wide small">Layanan Kami</span>
+            <h2 class="fw-bold mb-3 display-6">Fitur Utama Ofor.site</h2>
+            <p class="text-muted lead">Jelajahi keunggulan fitur yang kami rancang khusus untuk Anda.</p>
         </div>
-
-        <div class="row g-4 text-center">
-            <div class="col-md-4">
-                <div class="p-4 border rounded-4 bg-light h-100">
-                    <i class="bi bi-envelope-paper-heart text-purple" style="font-size: 2.5rem;"></i>
-                    <h4 class="fw-bold mt-3">Undangan</h4>
-                    <p class="text-muted">Undangan pernikahan, ulang tahun, atau event seru lainnya jadi lebih elegan.</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="p-4 border rounded-4 bg-light h-100">
-                    <i class="bi bi-balloon-heart text-purple" style="font-size: 2.5rem;"></i>
-                    <h4 class="fw-bold mt-3">Ucapan Selamat</h4>
-                    <p class="text-muted">Kasih kejutan ucapan selamat kelulusan, hari ibu, atau anniversary.</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="p-4 border rounded-4 bg-light h-100">
-                    <i class="bi bi-emoji-smile text-purple" style="font-size: 2.5rem;"></i>
-                    <h4 class="fw-bold mt-3">Kartu Spesial</h4>
-                    <p class="text-muted">Atau bahkan bikin kartu spesial buat nagih hutang ke teman 😄</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section id="keunggulan" class="py-5 bg-light">
-    <div class="container py-5">
-        <div class="text-center mb-5">
-            <h2 class="fw-bold mb-2">Kenapa Memilih OFFOR.SITE?</h2>
-            <p class="text-muted">Fitur premium dengan harga terjangkau untuk semua orang.</p>
-        </div>
-
+        
         <div class="row g-4">
-            <div class="col-md-6 col-lg-3">
-                <div class="card card-feature p-4 text-center">
-                    <div class="icon-box mx-auto">
-                        <i class="bi bi-infinity"></i>
-                    </div>
-                    <h5 class="fw-bold">Unlimited Kartu</h5>
-                    <p class="text-muted small mb-0">Bikin kartu sebanyak apapun tanpa ada batasan kuota. Bebas berekspresi!</p>
-                </div>
+            <div class="col-md-6 col-lg-4">
+                <article class="card h-100 modern-card p-4 bg-white">
+                    <div class="icon-wrapper mb-4 text-purple bg-light-purple"><i class="bi bi-infinity"></i></div>
+                    <h3 class="h5 fw-bold text-dark">Tanpa Batas</h3>
+                    <p class="text-muted mb-0">Pembuatan kartu digital tanpa batas. Buat untuk setiap momen berharga Anda tanpa ragu.</p>
+                </article>
             </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="card card-feature p-4 text-center">
-                    <div class="icon-box mx-auto">
-                        <i class="bi bi-magic"></i>
-                    </div>
-                    <h5 class="fw-bold">Mudah Digunakan</h5>
-                    <p class="text-muted small mb-0">Interface ramah pemula, tinggal drag & drop, kartu keren langsung jadi.</p>
-                </div>
+            <div class="col-md-6 col-lg-4">
+                <article class="card h-100 modern-card p-4 bg-white">
+                    <div class="icon-wrapper mb-4 text-purple bg-light-purple"><i class="bi bi-palette-fill"></i></div>
+                    <h3 class="h5 fw-bold text-dark">Desain Bebas & Fleksibel</h3>
+                    <p class="text-muted mb-0">Bebas masukkan elemen interaktif: <strong>Video, Voice note, Teks, dan Gambar</strong>.</p>
+                </article>
             </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="card card-feature p-4 text-center">
-                    <div class="icon-box mx-auto">
-                        <i class="bi bi-palette"></i>
-                    </div>
-                    <h5 class="fw-bold">Desain Fleksibel</h5>
-                    <p class="text-muted small mb-0">Ubah background, tata letak teks, sampai warna sesuka hatimu.</p>
-                </div>
+            <div class="col-md-6 col-lg-4">
+                <article class="card h-100 modern-card p-4 bg-white">
+                    <div class="icon-wrapper mb-4 text-purple bg-light-purple"><i class="bi bi-link-45deg"></i></div>
+                    <h3 class="h5 fw-bold text-dark">Custom URL</h3>
+                    <p class="text-muted mb-0">Personalisasi link kartu sesuka Anda (contoh: <span class="text-purple fw-medium">ofor.site/kartu-cinta</span>).</p>
+                </article>
             </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="card card-feature p-4 text-center">
-                    <div class="icon-box mx-auto">
-                        <i class="bi bi-share"></i>
-                    </div>
-                    <h5 class="fw-bold">Praktis Dibagikan</h5>
-                    <p class="text-muted small mb-0">Sekali klik, sebarkan via sosmed, chat, atau tunjukkan QR codenya.</p>
-                </div>
+            <div class="col-md-6 col-lg-4">
+                <article class="card h-100 modern-card p-4 bg-white">
+                    <div class="icon-wrapper mb-4 text-purple bg-light-purple"><i class="bi bi-share-fill"></i></div>
+                    <h3 class="h5 fw-bold text-dark">Sharing Tanpa Download</h3>
+                    <p class="text-muted mb-0">Kirim langsung link ke penerima tanpa mengharuskan mereka mengunduh aplikasi.</p>
+                </article>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <article class="card h-100 modern-card p-4 bg-white">
+                    <div class="icon-wrapper mb-4 text-purple bg-light-purple"><i class="bi bi-qr-code-scan"></i></div>
+                    <h3 class="h5 fw-bold text-dark">QR Code Otomatis</h3>
+                    <p class="text-muted mb-0">Sistem menggenerate QR Code otomatis untuk setiap kartu agar mudah dibagikan cetak maupun digital.</p>
+                </article>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <article class="card h-100 modern-card p-4 bg-white">
+                    <div class="icon-wrapper mb-4 text-purple bg-light-purple"><i class="bi bi-image"></i></div>
+                    <h3 class="h5 fw-bold text-dark">Background Custom</h3>
+                    <p class="text-muted mb-0">Kustomisasi latar belakang kartu digital dengan pilihan warna atau gambar Anda sendiri.</p>
+                </article>
             </div>
         </div>
     </div>
 </section>
 
-<section class="py-5 bg-purple text-white text-center">
+<section class="py-5 bg-white">
     <div class="container py-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <h2 class="fw-bold mb-3">Udah Punya Ide Mau Bikin Kartu Apa?</h2>
-                <p class="lead mb-5 opacity-75">
-                    Jangan ditunda lagi, mending cobain sekarang dan lihat sendiri betapa gampangnya bikin orang terdekatmu tersenyum lewat OFFOR.SITE!
-                </p>
-                <a href="{{route('register')}}" class="btn btn-light btn-lg text-purple fw-bold px-5 py-3 rounded-pill shadow">
-                    Mulai Sekarang <i class="bi bi-rocket-takeoff ms-2"></i>
-                </a>
+        <div class="row g-5 align-items-center">
+            <div class="col-lg-5">
+                <span class="text-purple fw-bold mb-2 d-block text-uppercase tracking-wide small">Penggunaan</span>
+                <h2 class="fw-bold mb-4 text-dark display-6">Cocok Untuk Momen Apa Saja?</h2>
+                <p class="text-muted mb-4">Kartu digital Ofor.site sangat serbaguna dan dapat disesuaikan untuk berbagai kegiatan atau sekadar pesan hangat.</p>
+                <ul class="list-group list-group-flush border-0 pe-lg-4">
+                    <li class="list-group-item bg-transparent border-0 d-flex align-items-center mb-3 p-0">
+                        <div class="icon-wrapper bg-light-purple text-danger me-3" style="width: 48px; height: 48px; font-size: 1.2rem;"><i class="bi bi-heart-fill"></i></div>
+                        <span class="fs-5 text-dark fw-medium">Menyatakan perasaan</span>
+                    </li>
+                    <li class="list-group-item bg-transparent border-0 d-flex align-items-center mb-3 p-0">
+                        <div class="icon-wrapper bg-light-purple text-warning me-3" style="width: 48px; height: 48px; font-size: 1.2rem;"><i class="bi bi-emoji-smile-fill"></i></div>
+                        <span class="fs-5 text-dark fw-medium">Kejutan / prank lucu</span>
+                    </li>
+                    <li class="list-group-item bg-transparent border-0 d-flex align-items-center mb-3 p-0">
+                        <div class="icon-wrapper bg-light-purple text-primary me-3" style="width: 48px; height: 48px; font-size: 1.2rem;"><i class="bi bi-gift-fill"></i></div>
+                        <span class="fs-5 text-dark fw-medium">Ulang tahun / anniversary</span>
+                    </li>
+                    <li class="list-group-item bg-transparent border-0 d-flex align-items-center mb-3 p-0">
+                        <div class="icon-wrapper bg-light-purple text-purple me-3" style="width: 48px; height: 48px; font-size: 1.2rem;"><i class="bi bi-envelope-paper-heart-fill"></i></div>
+                        <span class="fs-5 text-dark fw-medium">Undangan digital</span>
+                    </li>
+                    <li class="list-group-item bg-transparent border-0 d-flex align-items-center p-0">
+                        <div class="icon-wrapper bg-light-purple text-success me-3" style="width: 48px; height: 48px; font-size: 1.2rem;"><i class="bi bi-chat-left-quote-fill"></i></div>
+                        <span class="fs-5 text-dark fw-medium">Pesan personal</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-lg-7">
+                <div class="bg-light p-4 p-md-5 rounded-4 border border-light shadow-sm">
+                    <h2 class="fw-bold mb-5 text-dark h3">Kenapa Memilih Ofor.site?</h2>
+                    <div class="row g-4">
+                        <div class="col-sm-6">
+                            <div class="d-flex align-items-start modern-card p-3 bg-white h-100">
+                                <i class="bi bi-person-hearts text-purple fs-2 me-3 mt-1"></i>
+                                <div>
+                                    <h4 class="fw-bold h5 text-dark mb-1">Personal</h4>
+                                    <p class="small text-muted mb-0">Terasa lebih dekat dan sesuai karakter Anda.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="d-flex align-items-start modern-card p-3 bg-white h-100">
+                                <i class="bi bi-lightbulb text-warning fs-2 me-3 mt-1"></i>
+                                <div>
+                                    <h4 class="fw-bold h5 text-dark mb-1">Kreatif</h4>
+                                    <p class="small text-muted mb-0">Bebas berekspresi dan eksplorasi ide tanpa batas.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="d-flex align-items-start modern-card p-3 bg-white h-100">
+                                <i class="bi bi-cursor text-primary fs-2 me-3 mt-1"></i>
+                                <div>
+                                    <h4 class="fw-bold h5 text-dark mb-1">Interaktif</h4>
+                                    <p class="small text-muted mb-0">Padukan visual dan audio jadi satu halaman keren.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="d-flex align-items-start modern-card p-3 bg-white h-100">
+                                <i class="bi bi-patch-check text-success fs-2 me-3 mt-1"></i>
+                                <div>
+                                    <h4 class="fw-bold h5 text-dark mb-1">Profesional</h4>
+                                    <p class="small text-muted mb-0">Sistem handal, tersimpan rapih dan responsif.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</section>
+
+<section id="harga" class="py-5 bg-light-purple position-relative mt-4">
+    <div class="container py-5">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-6 col-md-8 mt-3">
+                <div class="text-center mb-4">
+                    <h2 class="fw-bold display-6">Sistem Premium</h2>
+                    <p class="text-muted">Biaya terjangkau untuk fitur maksimal seumur hidup.</p>
+                </div>
+                
+                <div class="card border-0 shadow-lg rounded-4 overflow-hidden premium-card bg-white mt-4">
+                    <div class="premium-badge">AKSES PREMIUM</div>
+                    <div class="bg-purple text-white py-5 position-relative">
+                        <h3 class="fw-bold mb-1 fs-4">Sekali Bayar</h3>
+                        <div class="display-3 fw-bold mt-2">Rp15.000</div>
+                    </div>
+                    <div class="card-body p-4 p-md-5">
+                        <ul class="list-unstyled text-start mb-4 fs-5 mx-auto w-75">
+                            <li class="mb-3 d-flex align-items-center"><i class="bi bi-check-circle-fill text-purple me-3"></i> <span><strong>Unlimited</strong> kartu</span></li>
+                            <li class="mb-3 d-flex align-items-center"><i class="bi bi-check-circle-fill text-purple me-3"></i> <span><strong>Semua fitur</strong> terbuka</span></li>
+                            <li class="mb-3 d-flex align-items-center"><i class="bi bi-check-circle-fill text-purple me-3"></i> <span><strong>Tanpa batasan</strong> penggunaan</span></li>
+                        </ul>
+                        
+                        <div class="alert alert-danger bg-danger bg-opacity-10 text-danger border-0 rounded-3 text-start small mb-4 shadow-sm">
+                            <div class="d-flex">
+                                <i class="bi bi-info-circle-fill fs-5 me-2"></i>
+                                <div>
+                                    <strong>Perhatian:</strong> Tidak ada versi gratis. Hal ini karena kami <strong>fokus penuh pada kualitas & eksklusivitas</strong> layanan untuk Anda.
+                                </div>
+                            </div>
+                        </div>
+
+                        <a href="{{ route('register') }}" class="btn btn-purple btn-lg w-100 rounded-3 fw-bold shadow-sm py-3">
+                            Dapatkan Akses Sekarang <i class="bi bi-arrow-right ms-2"></i>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

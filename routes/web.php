@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserDesainController;
+use App\Http\Controllers\AdminController;
 
 // Halaman Landing Page (Beranda OFFOR.SITE)
 Route::get('/', function () {
@@ -38,6 +39,10 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::delete('/dashboard/desain/{id}', [UserDesainController::class, 'destroy'])->name('desain.destroy');
     Route::get('/dashboard/search', [UserController::class, 'search'])->name('user.dashboard.search');
     Route::get('/dashboard/payment', [UserController::class, 'createPayment'])->name('user.payment.create');
+});
+
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
 });
 
 Route::get('/{slug}', [App\Http\Controllers\UserDesainController::class, 'show'])->name('desain.show');
