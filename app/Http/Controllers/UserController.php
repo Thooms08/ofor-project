@@ -108,6 +108,9 @@ class UserController extends Controller
         $query = $request->get('q'); // Ambil kata kunci ketikan user
         $userId = Auth::id();
 
+        // Cek status premium user
+        $hasPaid = UserPayment::where('user_id', $userId)->where('status', 'success')->exists();
+
         // Cari berdasarkan slug ATAU tanggal (timestamp)
         $desains = Desain::where('user_id', $userId)
             ->where(function($q) use ($query) {
@@ -119,11 +122,16 @@ class UserController extends Controller
             ->get();
 
         // Format data agar mudah dirender oleh JavaScript menjadi HTML
-        $formattedDesains = $desains->map(function($item) {
+        $formattedDesains = $desains->map(function($item) use ($hasPaid) {
             // Logika Preview Background (Sama seperti yang kita perbaiki sebelumnya)
             $bg = $item->background ?? '#7e22ce';
             $isColor = str_starts_with($bg, '#') || str_starts_with($bg, 'rgb');
             
+            // Logika validasi tombol Edit di AJAX API
+            $editButton = $hasPaid 
+                ? '<a href="'.url('/desain/'.$item->slug).'" class="btn btn-outline-secondary btn-sm flex-fill rounded-pill fw-medium"><i class="bi bi-pencil-square"></i> Edit</a>'
+                : '<button onclick="promptPayment()" class="btn btn-outline-secondary btn-sm flex-fill rounded-pill fw-medium"><i class="bi bi-lock-fill"></i> Edit</button>';
+
             return [
                 'id' => $item->id,
                 'slug' => $item->slug,
@@ -131,7 +139,7 @@ class UserController extends Controller
                 // Format timestamp jadi manusiawi, misal: "2 jam yang lalu" atau tanggalnya
                 'updated_at' => $item->updated_at->diffForHumans(), 
                 'show_url' => route('desain.show', $item->slug),
-                'edit_url' => route('desain.edit', $item->slug),
+                'edit_button' => $editButton, // <-- Tombol edit yang diinject
                 'delete_url' => route('desain.destroy', $item->id),
                 'bg_style' => $isColor 
                                 ? "background-color: {$bg};" 

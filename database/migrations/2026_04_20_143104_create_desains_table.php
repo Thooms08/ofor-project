@@ -6,53 +6,53 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
-        // Migration desains
+        // Tabel Utama Desain
         Schema::create('desains', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->enum('aspek_rasio', ['9:16', '16:9']);
-            $table->string('background'); // HEX atau path
-            $table->string('voice')->nullable();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('slug')->unique();
+            $table->string('aspek_rasio')->default('9-16');
+            $table->string('background')->default('#ffffff'); // bisa hex atau path file
+            $table->string('voice')->nullable(); // path file audio
+            $table->float('voice_pos_x')->default(20);
+            $table->float('voice_pos_y')->default(20);
             $table->timestamps();
         });
 
-        // Migration images
-        Schema::create('images', function (Blueprint $table) {
+        // Tabel Relasi: Teks pada Desain
+        Schema::create('desain_texts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('desain_id')->constrained()->onDelete('cascade');
-            $table->string('image');
-            $table->decimal('size', 8, 2)->default(100);
-            $table->integer('position_x')->default(0);
-            $table->integer('position_y')->default(0);
-            $table->timestamps();
-        });
-
-        // Migration texts
-        Schema::create('texts', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('desain_id')->constrained()->onDelete('cascade');
-            $table->string('font');
+            $table->foreignId('desain_id')->constrained('desains')->onDelete('cascade');
             $table->text('text');
-            $table->integer('size')->default(20);
-            $table->integer('position_x')->default(0);
-            $table->integer('position_y')->default(0);
+            $table->string('font');
+            $table->string('color');
+            $table->float('size')->default(20);
+            $table->float('width')->nullable();
+            $table->float('height')->nullable();
+            $table->float('position_x')->default(0);
+            $table->float('position_y')->default(0);
+            $table->timestamps();
+        });
+
+        // Tabel Relasi: Gambar tambahan pada Desain
+        Schema::create('desain_images', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('desain_id')->constrained('desains')->onDelete('cascade');
+            $table->string('image'); // path file gambar
+            $table->float('position_x')->default(0);
+            $table->float('position_y')->default(0);
+            $table->float('width')->nullable();
+            $table->float('height')->nullable();
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
+        Schema::dropIfExists('desain_images');
+        Schema::dropIfExists('desain_texts');
         Schema::dropIfExists('desains');
-        Schema::dropIfExists('images');
-        Schema::dropIfExists('texts');
     }
 };

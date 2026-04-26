@@ -100,7 +100,7 @@
                 <p class="text-muted mb-0">Kelola, edit, atau bagikan desain kartu interaktif yang sudah kamu buat.</p>
             </div>
             <div class="col-md-4 text-md-end">
-                @if($hasPaid)
+                @if($hasPaid || count($desains) == 0)
                     <a href="{{ route('desain.index') }}" class="btn btn-purple btn-lg rounded-pill fw-bold shadow-sm">
                         <i class="bi bi-plus-lg me-1"></i> Buat Kartu Baru
                     </a>
@@ -122,7 +122,6 @@
                 </div>
             </div>
         </div>
-</div>
 
         <div class="row g-4 mt-3 px-4" id="cardContainer">
             @forelse($desains as $item)
@@ -165,9 +164,15 @@
                                     <i class="bi bi-share"></i> Share
                                 </button>
                                 
-                                <a href="{{ url('/desain/'.$item->slug) }}" class="btn btn-outline-secondary btn-sm flex-fill rounded-pill fw-medium">
-                                    <i class="bi bi-pencil-square"></i> Edit
-                                </a>
+                                @if($hasPaid)
+                                    <a href="{{ url('/desain/'.$item->slug) }}" class="btn btn-outline-secondary btn-sm flex-fill rounded-pill fw-medium">
+                                        <i class="bi bi-pencil-square"></i> Edit
+                                    </a>
+                                @else
+                                    <button onclick="promptPayment()" class="btn btn-outline-secondary btn-sm flex-fill rounded-pill fw-medium">
+                                        <i class="bi bi-lock-fill"></i> Edit
+                                    </button>
+                                @endif
 
                                 <form action="{{ url('/dashboard/desain/'.$item->id) }}" method="POST" class="d-inline" id="delete-form-{{ $item->id }}">
                                     @csrf
@@ -185,7 +190,7 @@
                     <div class="text-center py-5 bg-white rounded-4 shadow-sm">
                         <img src="https://cdn-icons-png.flaticon.com/512/7486/7486747.png" alt="Kosong" width="120" class="opacity-50 mb-3">
                         <h4 class="text-muted fw-bold">Belum ada kartu yang dibuat</h4>
-                        <p class="text-muted mb-4">Yuk, klik tombol di atas untuk membuat desain pertamamu!</p>
+                        <p class="text-muted mb-4">Yuk, klik tombol di atas untuk membuat desain pertamamu secara GRATIS!</p>
                     </div>
                 </div>
             @endforelse
@@ -221,7 +226,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
@@ -296,7 +300,6 @@
         document.addEventListener("DOMContentLoaded", function() {
             const searchInput = document.getElementById('searchInput');
             const cardContainer = document.getElementById('cardContainer');
-            // Sekarang Javascript bisa ngambil token ini dengan aman karena sudah dipasang di <head>
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
             searchInput.addEventListener('input', function(e) {
@@ -330,7 +333,6 @@
                     }
 
                     res.data.forEach(item => {
-                        // Desain card di-update mengikuti tampilan terbarumu (ada border radius, tombol bulet, dll)
                         let cardHtml = `
                         <div class="col-12 col-md-6 col-lg-4">
                             <div class="card desain-card border-0 shadow-sm rounded-4 h-100 bg-white overflow-hidden">
@@ -353,9 +355,7 @@
                                         <button onclick="openShareModal('${item.slug}')" class="btn btn-primary btn-sm flex-fill rounded-pill fw-medium">
                                             <i class="bi bi-share"></i> Share
                                         </button>
-                                        <a href="${item.edit_url}" class="btn btn-outline-secondary btn-sm flex-fill rounded-pill fw-medium">
-                                            <i class="bi bi-pencil-square"></i> Edit
-                                        </a>
+                                        ${item.edit_button}
                                         <form action="${item.delete_url}" method="POST" class="d-inline" id="delete-form-${item.id}">
                                             <input type="hidden" name="_token" value="${csrfToken}">
                                             <input type="hidden" name="_method" value="DELETE">
@@ -380,7 +380,7 @@
          function promptPayment() {
         Swal.fire({
             title: '<h4 class="fw-bold text-purple mb-0">Akses Premium</h4>',
-            html: '<p class="text-muted mt-2">Untuk mengakses fitur pembuatan kartu tanpa batas, silakan lakukan pembayaran sebesar <b>Rp 15.000</b> (Sekali Bayar) melalui QRIS.</p>',
+            html: '<p class="text-muted mt-2">Untuk mengakses fitur edit dan pembuatan kartu tanpa batas, silakan lakukan pembayaran sebesar <b>Rp 15.000</b> (Sekali Bayar) melalui QRIS.</p>',
             iconHtml: '<i class="bi bi-qr-code-scan text-purple"></i>',
             customClass: { icon: 'border-0' },
             showCancelButton: true,
@@ -415,16 +415,15 @@
                 text: "Sesi kamu akan diakhiri dan harus login kembali.",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#dc3545', // Warna merah danger
-                cancelButtonColor: '#6c757d',  // Warna abu-abu secondary
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',  
                 confirmButtonText: '<i class="bi bi-box-arrow-right me-1"></i> Ya, Keluar',
                 cancelButtonText: 'Batal',
-                reverseButtons: true, // Posisi tombol "Batal" di kiri, "Ya" di kanan
+                reverseButtons: true,
                 padding: '2em',
                 borderRadius: '1.5rem'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Kalau di-klik "Ya", eksekusi form logout-nya
                     document.getElementById('logout-form').submit();
                 }
             });
