@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Desain extends Model
 {
-    protected $fillable = ['user_id', 'slug', 'aspek_rasio', 'background', 'voice', 'voice_pos_x', 'voice_pos_y'];
+    protected $fillable = ['user_id', 'slug', 'judul', 'deskripsi','aspek_rasio', 'gambar_preview', 'background', 'voice', 'voice_pos_x', 'voice_pos_y'];
 
     public function texts() {
         return $this->hasMany(DesainText::class);

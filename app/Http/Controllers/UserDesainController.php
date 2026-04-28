@@ -68,13 +68,12 @@ class UserDesainController extends Controller
         $request->validate([
             'slug' => 'required',
             'aspek_rasio' => 'required',
-            // Gambar Max 2MB (2048 KB)
+            'judul' => 'required|string|max:80',
+            'deskripsi' => 'nullable|string|max:150',
+            'gambar_preview' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Max 2MB
             'background_file' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', 
-            // Voice Max 50MB (51200 KB) untuk mengamankan durasi 30 menit
             'voice' => 'nullable|mimes:mp3,webm,wav,ogg|max:51200',
-            // Validasi Array Gambar (Max 2MB)
             'canvas_images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            // Validasi Array Video (Max 15MB)
             'canvas_videos.*' => 'nullable|mimes:mp4,webm,ogg|max:15360',
         ]);
 
@@ -84,6 +83,25 @@ class UserDesainController extends Controller
         ]);
         
         $desain->aspek_rasio = $request->aspek_rasio;
+        $desain->judul = $request->judul;
+        $desain->deskripsi = $request->deskripsi;
+
+        // 0. Handle & Kompres Gambar Preview (BARU)
+        if ($request->hasFile('gambar_preview')) {
+            $file = $request->file('gambar_preview');
+            $filename = Str::random(10) . '_preview.' . $file->extension();
+            $destinationPath = public_path('assets/preview');
+            
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0777, true);
+            }
+
+            $destination = $destinationPath . '/' . $filename;
+            
+            // Kompres gambar preview dengan kualitas 70% agar ukurannya ± 80-100KB
+            $this->compressImage($file->getPathname(), $destination, 70);
+            $desain->gambar_preview = 'assets/preview/' . $filename;
+        }
 
         // 1. Handle & Kompres Background Image
         if ($request->hasFile('background_file')) {
@@ -91,7 +109,6 @@ class UserDesainController extends Controller
             $filename = Str::random(10) . '.' . $file->extension();
             $destination = public_path('assets/background/' . $filename);
             
-            // Panggil fungsi kompresi gambar (kualitas 65%)
             $this->compressImage($file->getPathname(), $destination, 65);
             $desain->background = 'assets/background/' . $filename;
         } else if ($request->background_color) {
@@ -145,7 +162,6 @@ class UserDesainController extends Controller
                     $filename = Str::random(10) . '.' . $file->extension();
                     $destination = public_path('assets/image/' . $filename);
                     
-                    // Kompres gambar canvas tambahan
                     $this->compressImage($file->getPathname(), $destination, 65);
                     $imgPath = 'assets/image/' . $filename;
                 }
@@ -166,7 +182,6 @@ class UserDesainController extends Controller
         if ($request->filled('canvas_videos_data')) {
             $vidData = json_decode($request->canvas_videos_data, true);
             
-            // Buat folder jika belum ada
             if (!file_exists(public_path('assets/video'))) {
                 mkdir(public_path('assets/video'), 0777, true);
             }
@@ -179,7 +194,6 @@ class UserDesainController extends Controller
                     $filename = Str::random(10) . '.' . $file->extension();
                     $destination = public_path('assets/video/' . $filename);
                     
-                    // Panggil fungsi kompresi video
                     $this->compressVideo($file->getPathname(), $destination);
                     $vidPath = 'assets/video/' . $filename;
                 }

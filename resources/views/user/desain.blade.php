@@ -120,6 +120,29 @@
         audio { height: 40px; width: 220px; outline: none; }
         .recording-pulse { animation: pulse 1.5s infinite; color: #ff4757; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        .input-purple {
+        background-color: #fcfaff;
+        border: 1px solid #d8b4fe;
+        color: #333;
+        transition: all 0.3s ease;
+    }
+    .input-purple:focus {
+        background-color: #ffffff;
+        border-color: var(--primary-purple);
+        box-shadow: 0 0 0 0.25rem rgba(126, 34, 206, 0.25);
+        outline: 0;
+    }
+    .image-upload-wrapper {
+        border: 2px dashed #d8b4fe;
+        background-color: #fcfaff;
+        border-radius: 12px;
+        padding: 12px;
+        transition: all 0.3s ease;
+    }
+    .image-upload-wrapper:hover {
+        border-color: var(--primary-purple);
+        background-color: var(--light-purple);
+    }
     </style>
 </head>
 <body>
@@ -140,6 +163,9 @@
         <div class="d-flex gap-2">
             <button class="btn btn-warning btn-sm fw-bold text-dark px-2 px-sm-3 shadow-sm text-nowrap" onclick="openShareModal()">
                 <i class="fa-solid fa-share-nodes"></i> <span class="d-none d-sm-inline">Bagikan</span>
+            </button>
+            <button class="btn btn-light btn-sm fw-bold text-purple-dark px-2 px-sm-3 shadow-sm text-nowrap me-2" data-bs-toggle="modal" data-bs-target="#metaModal">
+                <i class="fa-solid fa-gear"></i> <span class="d-none d-sm-inline">Pengaturan</span>
             </button>
             <button class="btn btn-light btn-sm fw-bold text-purple-dark px-2 px-sm-3 shadow-sm text-nowrap" onclick="saveDesign()" id="btn-save">
                <i class="fa-solid fa-floppy-disk"></i><span class="d-none d-sm-inline"> Simpan</span>
@@ -282,6 +308,56 @@
             <i class="fa-solid fa-download"></i> Download QR Code
         </button>
       </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="metaModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; overflow: hidden;">
+      
+      <div class="modal-header bg-purple text-white border-0 py-3">
+        <h5 class="modal-title fw-bold"><i class="fa-solid fa-sliders me-2"></i> Pengaturan Kartu</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      
+      <div class="modal-body bg-light-purple p-3 p-md-4">
+        
+        <div class="card border-0 shadow-sm rounded-4 p-3 mb-3">
+            <label class="form-label fw-bold text-purple-dark small mb-2">Judul Kartu <span class="text-danger">*</span></label>
+            <input type="text" id="judul-input" class="form-control input-purple py-2" placeholder="Contoh: Undangan Pernikahan Romeo & Juliet" maxlength="80" value="{{ $desain->judul ?? '' }}">
+            <div class="d-flex justify-content-end mt-2">
+                <small id="judul-counter" class="text-muted" style="font-size: 11px;">0 / 80</small>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm rounded-4 p-3 mb-3">
+            <label class="form-label fw-bold text-purple-dark small mb-2">Deskripsi Singkat <span class="text-muted fw-normal">(Opsional)</span></label>
+            <textarea id="deskripsi-input" class="form-control input-purple py-2" rows="3" placeholder="Tuliskan pesan singkat atau keterangan kartu di sini..." maxlength="150">{{ $desain->deskripsi ?? '' }}</textarea>
+            <div class="d-flex justify-content-end mt-2">
+                <small id="deskripsi-counter" class="text-muted" style="font-size: 11px;">0 / 150</small>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm rounded-4 p-3">
+            <label class="form-label fw-bold text-purple-dark small mb-1">Gambar Preview <span class="text-muted fw-normal">(Opsional)</span></label>
+            <p class="text-muted mb-3" style="font-size: 12px;">Maksimal 2MB. Gambar akan otomatis di-compress (± 80KB).</p>
+            
+            <div class="image-upload-wrapper d-flex flex-column align-items-center w-100">
+                <img id="preview-image-display" src="{{ isset($desain->gambar_preview) ? asset($desain->gambar_preview) : asset('logo-ofor.jpg') }}" alt="Preview" class="rounded-3 mb-3 shadow-sm" style="width: 100%; max-height: 160px; object-fit: cover;">
+                
+                <button type="button" class="btn btn-outline-purple btn-sm w-100 fw-bold py-2" onclick="document.getElementById('preview-upload').click()">
+                    <i class="fa-solid fa-cloud-arrow-up me-1"></i> Pilih Gambar Baru
+                </button>
+                <input type="file" id="preview-upload" hidden accept="image/png, image/jpeg, image/jpg">
+            </div>
+        </div>
+
+      </div>
+      
+      <div class="modal-footer border-0 bg-white py-3">
+        <button type="button" class="btn btn-purple w-100 fw-bold rounded-3 py-2" data-bs-dismiss="modal">Selesai & Tutup</button>
+      </div>
+      
     </div>
   </div>
 </div>
@@ -708,19 +784,36 @@ function renderVideo(src, x, y, width, height, fileObject = null, existingPath =
     });
 
     // ----- SIMPAN DATA -----
+    // ----- SIMPAN DATA -----
     async function saveDesign() {
         const slug = document.getElementById('slug-input').value;
         if (!slug) return Swal.fire('Oops!', 'Harap isi URL/Slug untuk kartu!', 'warning');
+        
+        // Cek validasi Wajib
+        const judulValue = document.getElementById('judul-input').value.trim();
+        if (!judulValue) {
+            return Swal.fire('Peringatan!', 'Judul Kartu pada menu Pengaturan tidak boleh kosong!', 'warning');
+        }
 
         document.getElementById('btn-save').innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
         document.getElementById('btn-save').disabled = true;
 
+        // 1. DEKLARASIKAN FORM DATA DI SINI (SEBELUM APPEND)
         const formData = new FormData();
+        
+        // 2. MASUKKAN SEMUA DATA
         formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
         formData.append('slug', slug);
         formData.append('aspek_rasio', document.querySelector('input[name="ratio"]:checked').value);
+        formData.append('judul', judulValue);
+        formData.append('deskripsi', document.getElementById('deskripsi-input').value.trim());
+
+        const previewFile = document.getElementById('preview-upload').files[0];
+        if(previewFile) {
+            formData.append('gambar_preview', previewFile);
+        }
         
-                // --- PERBAIKAN LOGIKA BACKGROUND ---
+        // --- LOGIKA BACKGROUND ---
         const canvasElement = document.getElementById('card-canvas');
         const bgFile = document.getElementById('img-upload').files[0];
 
@@ -775,7 +868,7 @@ function renderVideo(src, x, y, width, height, fileObject = null, existingPath =
         });
         formData.append('canvas_images_data', JSON.stringify(canvasImgs));
 
-                // Extract Videos Canvas
+        // Extract Videos Canvas
         const canvasVideos = [];
         let vidIndex = 0;
         document.querySelectorAll('.video-box').forEach(el => {
@@ -816,7 +909,6 @@ function renderVideo(src, x, y, width, height, fileObject = null, existingPath =
             
              if (response.ok) {
                 hasUnsavedChanges = false; 
-                // Redirect dihilangkan, cukup tampilkan pop up sukses saja!
                 Swal.fire('Berhasil!', 'Desain kartu tersimpan permanen.', 'success');
             } else {
                 let errors = '';
@@ -834,7 +926,6 @@ function renderVideo(src, x, y, width, height, fileObject = null, existingPath =
             document.getElementById('btn-save').disabled = false;
         }
     }
-
     function rgbToHex(rgb) {
         if(rgb.startsWith('#')) return rgb;
         let a = rgb.split("(")[1].split(")")[0].split(",");
@@ -942,6 +1033,43 @@ document.getElementById('slug-input').addEventListener('input', function() {
             console.error('Gagal mengecek slug');
         }
     }, 500); 
+});
+// --- SCRIPT COUNTER & PREVIEW GAMBAR ---
+document.addEventListener("DOMContentLoaded", function() {
+    const judulInput = document.getElementById('judul-input');
+    const judulCounter = document.getElementById('judul-counter');
+    const deskripsiInput = document.getElementById('deskripsi-input');
+    const deskripsiCounter = document.getElementById('deskripsi-counter');
+    const previewUpload = document.getElementById('preview-upload');
+    const previewDisplay = document.getElementById('preview-image-display');
+
+    // Fungsi update counter realtime
+    const updateCounter = (input, counter, max) => {
+        let len = input.value.length;
+        counter.innerText = `${len} / ${max}`;
+        counter.className = len >= max ? "text-danger fw-bold" : "text-muted";
+        if (len > 0) markAsUnsaved();
+    };
+
+    judulInput.addEventListener('input', () => updateCounter(judulInput, judulCounter, 80));
+    deskripsiInput.addEventListener('input', () => updateCounter(deskripsiInput, deskripsiCounter, 150));
+
+    // Initialize counter di awal (jika mode edit)
+    updateCounter(judulInput, judulCounter, 80);
+    updateCounter(deskripsiInput, deskripsiCounter, 150);
+
+    // Live Preview Image saat dipilih
+    previewUpload.addEventListener('change', function() {
+        if (this.files && this.files[0]) {
+            const file = this.files[0];
+            if(file.size > 2 * 1024 * 1024) {
+                this.value = ''; // Reset input
+                return Swal.fire('Ukuran Terlalu Besar', 'Gambar preview maksimal 2MB!', 'error');
+            }
+            previewDisplay.src = URL.createObjectURL(file);
+            markAsUnsaved();
+        }
+    });
 });
 </script>
 </body>

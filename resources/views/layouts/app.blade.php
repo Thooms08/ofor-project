@@ -18,7 +18,7 @@
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:title" content="@yield('title', 'OFOR.SITE - Kartu Digital Interaktif')">
     <meta property="og:description" content="@yield('meta_description', 'OFOR.SITE - Platform pembuatan kartu digital interaktif, praktis, dan desain fleksibel.')">
-    <meta property="og:image" content="{{ asset('logo-ofor.jpg') }}">
+    <meta property="og:image" content="{{ asset('preview.jpg') }}">
     <meta property="og:image:width" content="1280">
     <meta property="og:image:height" content="1280">
 
@@ -26,7 +26,7 @@
     <meta name="twitter:url" content="{{ url()->current() }}">
     <meta name="twitter:title" content="@yield('title', 'OFOR.SITE - Kartu Digital Interaktif')">
     <meta name="twitter:description" content="@yield('meta_description', 'OFOR.SITE - Platform pembuatan kartu digital interaktif, praktis, dan desain fleksibel.')">
-    <meta name="twitter:image" content="{{ asset('logo-ofor.jpg') }}">
+    <meta name="twitter:image" content="{{ asset('preview.jpg') }}">
 
     <link rel="icon" type="image/png" href="{{ asset('logo-ofor.png') }}">
 
@@ -181,10 +181,14 @@
         }
 
         /* PWA Install Button */
+        /* PWA Install Button */
         #pwa-install-btn {
             position: fixed;
-            bottom: var(--sp-lg);
-            right: var(--sp-lg);
+            bottom: var(--sp-lg); /* Jarak dari bawah */
+            left: 0;
+            right: 0;
+            margin: 0 auto; /* Otomatis ke tengah */
+            width: max-content; /* Memastikan lebar tombol sesuai teksnya */
             z-index: 9999;
             display: none; /* Hidden by default */
             border-radius: 50px;
@@ -195,10 +199,15 @@
             border: none;
             font-weight: 600;
             animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            transition: transform 0.2s;
+            transition: transform 0.2s, background-color 0.2s;
         }
-        #pwa-install-btn:hover { transform: scale(1.05); background: var(--dark-purple); }
-        #pwa-install-btn:active { transform: scale(0.95); }
+        #pwa-install-btn:hover { 
+            transform: scale(1.05); 
+            background: var(--dark-purple); 
+        }
+        #pwa-install-btn:active { 
+            transform: scale(0.95); 
+        }
 
         @keyframes bounceIn {
             0% { opacity: 0; transform: translateY(100px); }

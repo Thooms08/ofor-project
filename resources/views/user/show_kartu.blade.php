@@ -4,6 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Kartu Spesial Untukmu | OFOR.SITE</title>
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="{{ $desain->judul ?? 'Kartu Spesial Untukmu' }}">
+    <meta property="og:description" content="{{ $desain->deskripsi ?? 'Buka tautan ini untuk melihat kartu digital interaktif yang dibuat khusus menggunakan OFOR.SITE!' }}">
+    <meta property="og:image" content="{{ $desain->gambar_preview ? asset($desain->gambar_preview) : asset('preview.jpg') }}">
+    <meta property="og:image:width" content="1280">
+    <meta property="og:image:height" content="720">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="{{ url()->current() }}">
+    <meta name="twitter:title" content="{{ $desain->judul ?? 'Kartu Spesial Untukmu' }}">
+    <meta name="twitter:description" content="{{ $desain->deskripsi ?? 'Buka tautan ini untuk melihat kartu digital interaktif yang dibuat khusus menggunakan OFOR.SITE!' }}">
+    <meta name="twitter:image" content="{{ $desain->gambar_preview ? asset($desain->gambar_preview) : asset('preview.jpg') }}">
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Comic+Neue:wght@700&family=Inter:wght@400;600&family=Patrick+Hand&family=Poppins:wght@500&family=Satisfy&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
