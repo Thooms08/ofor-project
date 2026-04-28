@@ -7,8 +7,8 @@
     <title>DASHBOARD ADMIN | OFOR.SITE</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="icon" type="image/jpeg" href="{{ asset('logo-ofor.jpg') }}">
-    <link rel="apple-touch-icon" href="{{ asset('logo-ofor.jpg') }}">
+    <link rel="icon" type="image/jpeg" href="{{ asset('logo-ofor.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('logo-ofor.png') }}">
     
     <style>
         /* CYBERPUNK THEME CSS */

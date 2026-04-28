@@ -25,4 +25,9 @@ class PublicController extends Controller
     {
         return view('faq');
     }
+
+    public function panduan()
+    {
+        return view('panduan');
+    }
 }

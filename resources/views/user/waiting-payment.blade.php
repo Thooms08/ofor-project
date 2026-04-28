@@ -6,8 +6,8 @@
     <title>Selesaikan Pembayaran | OFOR.SITE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="icon" type="image/jpeg" href="{{ asset('logo-ofor.jpg') }}">
-<link rel="apple-touch-icon" href="{{ asset('logo-ofor.jpg') }}">
+    <link rel="icon" type="image/jpeg" href="{{ asset('logo-ofor.png') }}">
+<link rel="apple-touch-icon" href="{{ asset('logo-ofor.png') }}">
     <style>
         .bg-purple-primary { background-color: #7e22ce; }
         .text-purple-primary { color: #7e22ce; }

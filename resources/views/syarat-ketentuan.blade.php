@@ -90,7 +90,7 @@
                             <div>
                                 <h3 class="h5 fw-bold mb-3">2. Persyaratan Pengguna</h3>
                                 <ul class="text-muted mb-0 ps-3">
-                                    <li class="mb-1">Berusia minimal 17 tahun atau mendapat izin wali</li>
+                                    <li class="mb-1">Tanpa batasan usia</li>
                                     <li class="mb-1">Menggunakan layanan untuk tujuan sah</li>
                                     <li>Bertanggung jawab atas konten</li>
                                 </ul>
@@ -122,6 +122,7 @@
                             <div>
                                 <h3 class="h5 fw-bold mb-3">4. Sistem Pembayaran</h3>
                                 <ul class="text-muted mb-0 ps-3">
+                                    <li class="mb-1">Gratis 1 kali percobaan</li>
                                     <li class="mb-1">Biaya: Rp15.000 (sekali bayar)</li>
                                     <li class="mb-1">Akses penuh setelah pembayaran</li>
                                     <li>Non-refundable (Tidak dapat dikembalikan)</li>

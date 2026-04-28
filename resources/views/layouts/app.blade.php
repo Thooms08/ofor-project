@@ -7,6 +7,10 @@
     <meta name="keywords" content="@yield('meta_keywords', 'kartu digital, pembuat kartu online, ofor.site')">
     <title>@yield('title', 'OFOR.SITE - Kartu Digital Interaktif')</title>
 
+    <meta name="theme-color" content="#7e22ce">
+    <link rel="manifest" href="{{ asset('manifest.json') }}">
+    <link rel="apple-touch-icon" href="{{ asset('logo-ofor.png') }}">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 
@@ -24,14 +28,17 @@
     <meta name="twitter:description" content="@yield('meta_description', 'OFOR.SITE - Platform pembuatan kartu digital interaktif, praktis, dan desain fleksibel.')">
     <meta name="twitter:image" content="{{ asset('logo-ofor.jpg') }}">
 
-    <link rel="icon" type="image/jpeg" href="{{ asset('logo-ofor.jpg') }}">
-<link rel="apple-touch-icon" href="{{ asset('logo-ofor.jpg') }}">
+    <link rel="icon" type="image/png" href="{{ asset('logo-ofor.png') }}">
 
     <style>
         :root {
-            --primary-purple: #7e22ce; /* Ungu utama yang modern */
+            --primary-purple: #7e22ce;
             --dark-purple: #581c87;
-            --light-purple: #f3e8ff; /* Ungu pastel untuk background */
+            --light-purple: #f3e8ff;
+            /* Spacing System */
+            --sp-sm: 8px;
+            --sp-md: 16px;
+            --sp-lg: 24px;
         }
         
         body {
@@ -40,7 +47,7 @@
             background-color: #ffffff;
             display: flex;
             flex-direction: column;
-            min-height: 100vh; /* Memastikan footer selalu di bawah */
+            min-height: 100vh;
         }
 
         /* Color Helpers */
@@ -98,6 +105,40 @@
             color: var(--primary-purple) !important;
         }
 
+        /* Navbar Toggler & Hamburger Animation */
+        .navbar-toggler {
+            border: none;
+            padding: var(--sp-sm);
+        }
+        .navbar-toggler:focus {
+            box-shadow: none;
+            outline: none;
+        }
+        .burger-icon {
+            width: 24px;
+            height: 2px;
+            background: var(--primary-purple);
+            display: block;
+            position: relative;
+            transition: all 0.3s ease-in-out;
+        }
+        .burger-icon::before, .burger-icon::after {
+            content: "";
+            width: 24px;
+            height: 2px;
+            background: var(--primary-purple);
+            position: absolute;
+            left: 0;
+            transition: all 0.3s ease-in-out;
+        }
+        .burger-icon::before { top: -8px; }
+        .burger-icon::after { bottom: -8px; }
+
+        /* Active state for Hamburger (turns to X) */
+        .navbar-toggler[aria-expanded="true"] .burger-icon { background: transparent; }
+        .navbar-toggler[aria-expanded="true"] .burger-icon::before { transform: rotate(45deg); top: 0; }
+        .navbar-toggler[aria-expanded="true"] .burger-icon::after { transform: rotate(-45deg); bottom: 0; }
+
         /* Cards */
         .card-feature {
             border: none;
@@ -138,23 +179,52 @@
             color: white;
             text-decoration: underline;
         }
+
+        /* PWA Install Button */
+        #pwa-install-btn {
+            position: fixed;
+            bottom: var(--sp-lg);
+            right: var(--sp-lg);
+            z-index: 9999;
+            display: none; /* Hidden by default */
+            border-radius: 50px;
+            padding: 12px 24px;
+            background: var(--primary-purple);
+            color: white;
+            box-shadow: 0 8px 20px rgba(126, 34, 206, 0.4);
+            border: none;
+            font-weight: 600;
+            animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            transition: transform 0.2s;
+        }
+        #pwa-install-btn:hover { transform: scale(1.05); background: var(--dark-purple); }
+        #pwa-install-btn:active { transform: scale(0.95); }
+
+        @keyframes bounceIn {
+            0% { opacity: 0; transform: translateY(100px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
+
+    <button id="pwa-install-btn">
+        <i class="bi bi-download me-2"></i> Install App
+    </button>
 
     <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top py-3">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="{{ url('/') }}">
                 <img src="{{ asset('logo-no-bg.png') }}" alt="Logo OFOR.SITE" height="50" class="me-2"> OFOR.SITE
             </a>
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="burger-icon"></span>
             </button>
             
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto mb-2 mb-lg-0 text-center">
                     <li class="nav-item">
-                        <a class="nav-link {{ request()->is('/') ? 'active' : '' }}" href="{{ url('/') }}">Home</a>
+                        <a class="nav-link {{ request()->is('/') ? 'active' : '' }}" href="{{ url('/') }}">Beranda</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url('/') }}#fitur">Fitur</a>
@@ -166,25 +236,25 @@
                         <a class="nav-link {{ request()->routeIs('tentang') ? 'active' : '' }}" href="{{ route('tentang') }}">Tentang</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/') }}#kontak">Kontak</a>
+                        <a class="nav-link {{ request()->routeIs('panduan') ? 'active' : '' }}" href="{{ route('panduan') }}">Panduan</a>
                     </li>
                 </ul>
-            <div class="d-flex flex-column flex-lg-row align-items-center gap-2 mt-3 mt-lg-0">
-                {{-- Jika belum login (guest), tampilkan tombol Login & Register --}}
-                @guest
-                    <a href="{{route('login')}}" class="btn btn-outline-purple w-100 w-lg-auto">Login</a>
-                    <a href="{{route('register')}}" class="btn btn-purple w-100 w-lg-auto">Register</a>
-                @endguest
+                <div class="d-flex flex-column flex-lg-row align-items-center gap-2 mt-3 mt-lg-0">
+                    {{-- Jika belum login (guest), tampilkan tombol Login & Register --}}
+                    @guest
+                        <a href="{{route('login')}}" class="btn btn-outline-purple w-100 w-lg-auto">Login</a>
+                        <a href="{{route('register')}}" class="btn btn-purple w-100 w-lg-auto">Register</a>
+                    @endguest
 
-                {{-- Jika sudah login (auth), tampilkan tombol Dashboard & Logout --}}
-                @auth
-                    <a href="{{route('user.dashboard')}}" class="btn btn-outline-purple w-100 w-lg-auto">Dashboard</a>
-                    <form action="{{ route('logout') }}" method="POST" class="w-100 w-lg-auto m-0">
-                        @csrf
-                        <button type="submit" class="btn btn-purple w-100">Logout</button>
-                    </form>
-                @endauth
-            </div>
+                    {{-- Jika sudah login (auth), tampilkan tombol Dashboard & Logout --}}
+                    @auth
+                        <a href="{{route('user.dashboard')}}" class="btn btn-outline-purple w-100 w-lg-auto">Dashboard</a>
+                        <form action="{{ route('logout') }}" method="POST" class="w-100 w-lg-auto m-0">
+                            @csrf
+                            <button type="submit" class="btn btn-purple w-100">Logout</button>
+                        </form>
+                    @endauth
+                </div>
             </div>
         </div>
     </nav>
@@ -223,5 +293,36 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('Service Worker Registered'))
+                    .catch(err => console.log('Service Worker Registration Failed', err));
+            });
+        }
+
+        let deferredPrompt;
+        const installBtn = document.getElementById('pwa-install-btn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installBtn.style.display = 'block';
+        });
+
+        installBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    installBtn.style.display = 'none';
+                }
+                deferredPrompt = null;
+            }
+        });
+    </script>
+    @include('layouts.wa')
 </body>
 </html>

@@ -17,6 +17,7 @@ Route::get('/tentang', [PublicController::class, 'tentang'])->name('tentang');
 Route::get('/syarat-ketentuan', [PublicController::class, 'SyaratKetentuan'])->name('syarat-ketentuan');
 Route::get('/keamanan-privasi', [PublicController::class, 'KeamananPrivasi'])->name('keamanan-privasi');
 Route::get('/faq', [PublicController::class, 'faq'])->name('faq');
+Route::get('/panduan', [PublicController::class, 'panduan'])->name('panduan');
 
 // Middleware Guest (Belum Login)
 Route::middleware('guest')->group(function () {

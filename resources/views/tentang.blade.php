@@ -90,7 +90,7 @@
                     <strong>Ofor.site</strong> adalah platform digital inovatif yang memungkinkan Anda untuk membuat <strong>kartu digital</strong> kreatif tanpa batas (unlimited) dengan mudah, cepat, dan fleksibel. 
                 </p>
                 <p class="text-secondary fs-5" style="line-height: 1.8;">
-                    Website ini dirancang untuk siapa saja yang ingin menyampaikan pesan secara unik, personal, dan lebih berkesan dibandingkan kartu konvensional. Dengan Ofor.site, Anda tidak hanya membuat kartu online biasa—Anda dapat menciptakan pengalaman digital yang interaktif.
+                    Website ini dirancang untuk siapa saja yang ingin menyampaikan pesan secara unik, personal, dan lebih berkesan dibandingkan kartu konvensional. Dengan Ofor.site, Anda tidak hanya membuat kartu online biasa, Anda dapat menciptakan pengalaman digital yang interaktif.
                 </p>
             </div>
         </div>
@@ -242,50 +242,5 @@
         </div>
     </section>
 
-    <section class="container py-5 mb-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-8 col-md-10">
-                <div class="card border-0 shadow-lg rounded-4 overflow-hidden text-center">
-                    <div class="bg-purple text-white py-4">
-                        <h2 class="fw-bold mb-0">Sistem Akses Premium</h2>
-                    </div>
-                    
-                    <div class="card-body p-5">
-                        <h3 class="display-3 fw-bold text-dark mb-1">Rp15.000</h3>
-                        <p class="text-muted mb-4 fs-5">(Hanya Sekali Bayar)</p>
-                        
-                        <div class="row justify-content-center mb-5">
-                            <div class="col-md-8">
-                                <ul class="list-unstyled text-start fs-5">
-                                    <li class="mb-3 d-flex align-items-center">
-                                        <i class="bi bi-check-circle-fill text-purple me-3 fs-4"></i> 
-                                        <span><strong>Unlimited</strong> kartu</span>
-                                    </li>
-                                    <li class="mb-3 d-flex align-items-center">
-                                        <i class="bi bi-check-circle-fill text-purple me-3 fs-4"></i> 
-                                        <span><strong>Semua fitur</strong> terbuka</span>
-                                    </li>
-                                    <li class="mb-3 d-flex align-items-center">
-                                        <i class="bi bi-check-circle-fill text-purple me-3 fs-4"></i> 
-                                        <span><strong>Tanpa batasan</strong> akses</span>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <div class="alert bg-purple-light text-start border-0 rounded-3 mb-0 p-4">
-                            <div class="d-flex align-items-start">
-                                <i class="bi bi-info-circle-fill text-purple fs-4 me-3 mt-1"></i>
-                                <div>
-                                    <h4 class="h6 fw-bold text-purple mb-1">Catatan Penting</h4>
-                                    <p class="mb-0 text-dark small">Tidak ada versi gratis pada platform kami. Hal ini karena kami <strong>fokus penuh pada kualitas & memberikan pengalaman premium</strong> yang maksimal untuk Anda.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 </main>
 @endsection

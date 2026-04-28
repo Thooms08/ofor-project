@@ -123,7 +123,7 @@
                         </h3>
                         <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
                             <div class="accordion-body">
-                                Tidak. Ofor.site menggunakan sistem akses premium dengan biaya <strong>Rp15.000 (sekali bayar)</strong>. Setelah pembayaran, Anda dapat membuat kartu digital tanpa batas dan mengakses semua fitur.
+                                Iya. Pengguna akan diberikan akses gratis 1 kali, Lalu seterusnya Ofor.site menggunakan sistem akses premium dengan biaya <strong>Rp15.000 (sekali bayar)</strong>. Setelah pembayaran, Anda dapat membuat kartu digital tanpa batas dan mengakses semua fitur.
                             </div>
                         </div>
                     </article>

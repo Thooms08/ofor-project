@@ -1,0 +1,23 @@
+{
+  "name": "OFOR.SITE - Kartu Digital Interaktif",
+  "short_name": "OFOR.SITE",
+  "description": "Platform pembuatan kartu digital interaktif praktis dan fleksibel.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#7e22ce",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/logo-ofor.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo-ofor.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
