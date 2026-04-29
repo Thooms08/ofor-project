@@ -153,6 +153,36 @@
     .shape-item { background: white; border: 1px solid #ddd; border-radius: 10px; padding: 15px; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; aspect-ratio: 1; }
     .shape-item:hover { border-color: var(--purple-primary); box-shadow: 0 4px 10px rgba(126,34,206,0.15); transform: translateY(-3px); }
     .shape-item svg { width: 100%; height: 100%; fill: var(--purple-dark); }
+    /* --- ANIMASI ERROR USER FRIENDLY --- */
+@keyframes shake-error {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    50% { transform: translateX(8px); }
+    75% { transform: translateX(-8px); }
+}
+
+.input-error-shake {
+    animation: shake-error 0.4s ease-in-out;
+    border: 2px solid #dc3545 !important;
+    background-color: #fff4f4 !important;
+}
+
+.error-hint-box {
+    background-color: #fff4f4;
+    color: #dc3545;
+    border: 1px solid #dc3545;
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 12px;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
     </style>
 </head>
 <body>
@@ -187,13 +217,17 @@
     </div>
 
     <div class="position-relative mb-2 w-100" style="max-width: 400px; margin: 0 auto;">
-        <div class="input-group input-group-sm shadow-sm">
-            <span class="input-group-text bg-white border-0 text-muted px-2" style="font-size: 0.8rem; font-weight: 600;">ofor.site/</span>
-            <input type="text" id="slug-input" class="form-control border-0 ps-1" placeholder="nama-kartu" value="{{ $desain->slug ?? '' }}" autocomplete="off">
-            <span class="input-group-text bg-white border-0" id="slug-status-icon"></span>
-        </div>
-        <div id="slug-feedback" class="small fw-bold mt-1 px-2" style="display:none; font-size: 11px;"></div>
+    <div class="input-group input-group-sm shadow-sm">
+        <span class="input-group-text bg-white border-0 text-muted px-2" style="font-size: 0.8rem; font-weight: 600;">ofor.site/</span>
+        <input type="text" id="slug-input" class="form-control border-0 ps-1" placeholder="nama-kartu" value="{{ $desain->slug ?? '' }}" autocomplete="off">
+        <span class="input-group-text bg-white border-0" id="slug-status-icon"></span>
     </div>
+    <div id="slug-feedback" class="small fw-bold mt-1 px-2" style="display:none; font-size: 11px;"></div>
+    
+    <div id="slug-error-hint" class="error-hint-box mt-2 d-none position-absolute w-100 text-center" style="z-index: 10;">
+        <i class="fa-solid fa-arrow-up"></i> Bro, URL/Slug ini wajib diisi buat link kartumu!
+    </div>
+</div>
 
     <div class="d-flex gap-2 overflow-x-auto hide-scrollbar pb-1 align-items-center flex-nowrap w-100">
         
@@ -274,14 +308,26 @@
                 <i class="fa-solid fa-text-height text-white-50" style="font-size: 11px;"></i>
                 <input type="range" class="form-range" id="text-size" min="12" max="72" value="20" oninput="updateActiveText()" title="Ukuran Teks">
             </div>
+            <div class="d-flex align-items-center gap-1 mx-1" style="width: 70px;">
+                <i class="fa-solid fa-rotate-right text-white-50" style="font-size: 11px;" title="Rotasi Teks"></i>
+                <input type="range" class="form-range" id="text-rotation" min="0" max="360" value="0" oninput="updateActiveText()" title="Rotasi Teks">
+            </div>
 
             <button class="btn btn-sm btn-custom fw-bold text-nowrap" onclick="addText()"><i class="fa-solid fa-font"></i> Teks</button>
         </div>
 
         <div class="toolbar-group">
+            <div class="d-flex align-items-center gap-1 mx-1" style="width: 70px;">
+                <i class="fa-solid fa-rotate-right text-white-50" style="font-size: 11px;" title="Rotasi Gambar"></i>
+                <input type="range" class="form-range" id="image-rotation" min="0" max="360" value="0" oninput="updateActiveImage()" title="Rotasi Gambar">
+            </div>
             <button class="btn btn-sm btn-custom fw-bold text-nowrap" onclick="document.getElementById('canvas-img-upload').click()"><i class="fa-solid fa-photo-film"></i> Gambar</button>
             <input type="file" id="canvas-img-upload" hidden accept="image/png, image/jpeg, image/jpg" onchange="addCanvasImage(this)">
-            
+
+            <div class="d-flex align-items-center gap-1 mx-1" style="width: 70px;">
+                <i class="fa-solid fa-rotate-right text-white-50" style="font-size: 11px;" title="Rotasi Video"></i>
+                <input type="range" class="form-range" id="video-rotation" min="0" max="360" value="0" oninput="updateActiveVideo()" title="Rotasi Video">
+            </div>
             <button class="btn btn-sm btn-custom fw-bold text-nowrap" onclick="document.getElementById('canvas-vid-upload').click()"><i class="fa-solid fa-video"></i> Video</button>
             <input type="file" id="canvas-vid-upload" hidden accept="video/mp4, video/webm, video/ogg" onchange="addCanvasVideo(this)">
             
@@ -369,6 +415,11 @@
         <div class="card border-0 shadow-sm rounded-4 p-3 mb-3">
             <label class="form-label fw-bold text-purple-dark small mb-2">Judul Kartu <span class="text-danger">*</span></label>
             <input type="text" id="judul-input" class="form-control input-purple py-2" placeholder="Contoh: Undangan Pernikahan Romeo & Juliet" maxlength="80" value="{{ $desain->judul ?? '' }}">
+            
+            <div id="judul-error-hint" class="text-danger mt-1 fw-bold d-none" style="font-size: 12px;">
+                <i class="fa-solid fa-arrow-up"></i> Wah kelupaan nih, Judul kartunya wajib diisi ya!
+            </div>
+
             <div class="d-flex justify-content-end mt-2">
                 <small id="judul-counter" class="text-muted" style="font-size: 11px;">0 / 80</small>
             </div>
@@ -450,6 +501,7 @@
     let activeElement = null;
     let textCounter = 0;
     let imgCounter = 0;
+    let vidCounter = 0;
     let canvasFiles = {}; 
     
     // Variabel Audio
@@ -629,8 +681,12 @@ document.addEventListener("DOMContentLoaded", function() {
             document.getElementById('font-family').value = textNode.style.fontFamily || "'Inter', sans-serif";
             document.getElementById('text-color').value = rgbToHex(textNode.style.color || window.getComputedStyle(textNode).color);
             document.getElementById('text-size').value = parseInt(window.getComputedStyle(textNode).fontSize) || 20;
-        }else 
-        if (el.classList.contains('shape-box')) {
+            document.getElementById('text-rotation').value = el.getAttribute('data-rotation') || 0;
+        }else if (el.classList.contains('image-box')) {
+            document.getElementById('image-rotation').value = el.getAttribute('data-rotation') || 0;
+        }else if (el.classList.contains('video-box')) {
+            document.getElementById('video-rotation').value = el.getAttribute('data-rotation') || 0;
+        }else if (el.classList.contains('shape-box')) {
             document.getElementById('element-color').value = rgbToHex(el.style.color);
             document.getElementById('element-rotation').value = el.getAttribute('data-rotation');
             document.getElementById('element-size').value = parseFloat(el.style.width);
@@ -655,20 +711,23 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // ----- MANAJEMEN TEKS & UKURAN -----
-    function addText(text = "Ketik di sini...", x = 20, y = 20, font = "'Inter', sans-serif", color = "#000000", size = 20, width = 150, height = null) {
+   // Tambahkan parameter rotation = 0 di fungsinya
+    function addText(text = "Ketik di sini...", x = 20, y = 20, font = "'Inter', sans-serif", color = "#000000", size = 20, width = 150, height = null, rotation = 0) {
         textCounter++;
         const div = document.createElement('div');
         div.className = 'design-element text-box';
         div.id = 'text-' + textCounter;
         div.setAttribute('data-x', x);
         div.setAttribute('data-y', y);
+        div.setAttribute('data-rotation', rotation); // Simpan rotasi di atribut HTML
         div.style.transform = `translate(${x}px, ${y}px)`;
         div.style.width = width ? `${width}px` : '150px';
         if(height) div.style.height = `${height}px`;
 
+        // Tambahkan transform rotate di element text-content
         div.innerHTML = `
             <div class="el-btn-delete" onclick="deleteElement(event, '${div.id}')"><i class="fa-solid fa-xmark"></i></div>
-            <div class="text-content" contenteditable="true" style="font-family: ${font}; color: ${color}; font-size: ${size}px; height: 100%; width: 100%;">${text}</div>
+            <div class="text-content" contenteditable="true" style="font-family: ${font}; color: ${color}; font-size: ${size}px; transform: rotate(${rotation}deg); height: 100%; width: 100%;">${text}</div>
             <div class="el-handle-resize"></div>
         `;
 
@@ -678,19 +737,26 @@ document.addEventListener("DOMContentLoaded", function() {
         div.querySelector('.text-content').addEventListener('input', markAsUnsaved);
         
         setActive(div);
+        document.getElementById('text-rotation').value = rotation; // Set value slider default
         markAsUnsaved();
     }
 
     function updateActiveText() {
         if (activeElement && activeElement.classList.contains('text-box')) {
             const textNode = activeElement.querySelector('.text-content');
+            const rotation = document.getElementById('text-rotation').value; // Ambil nilai slider rotasi
+            
             textNode.style.fontFamily = document.getElementById('font-family').value;
             textNode.style.color = document.getElementById('text-color').value;
             textNode.style.fontSize = document.getElementById('text-size').value + 'px';
+            
+            // Terapkan efek rotasinya ke elemen
+            textNode.style.transform = `rotate(${rotation}deg)`;
+            activeElement.setAttribute('data-rotation', rotation); 
+            
             markAsUnsaved();
         }
     }
-
     // ----- MANAJEMEN GAMBAR CANVAS -----
    function addCanvasImage(input) {
     if (input.files && input.files[0]) {
@@ -711,62 +777,79 @@ document.addEventListener("DOMContentLoaded", function() {
 }
 
     // ----- MANAJEMEN VIDEO CANVAS -----
-function addCanvasVideo(input) {
-    if (input.files && input.files[0]) {
-        const file = input.files[0];
-        if(!file.type.match('video.*')) return Swal.fire('Error', 'Format file harus MP4/WebM/Ogg', 'error');
+// ----- MANAJEMEN VIDEO CANVAS -----
+    function addCanvasVideo(input) {
+        if (input.files && input.files[0]) {
+            const file = input.files[0];
+            if(!file.type.match('video.*')) return Swal.fire('Error', 'Format file harus MP4/WebM/Ogg', 'error');
 
-        // Batasi ukuran video (Maks 15MB)
-        if(file.size > 15 * 1024 * 1024) return Swal.fire('Ukuran Terlalu Besar', 'Ukuran video maksimal 15MB!', 'error');
+            // Batasi ukuran video (Maks 15MB)
+            if(file.size > 15 * 1024 * 1024) return Swal.fire('Ukuran Terlalu Besar', 'Ukuran video maksimal 15MB!', 'error');
 
-        const videoUrl = URL.createObjectURL(file);
-        
-        // Cek durasi video sebelum diproses
-        const tempVideo = document.createElement('video');
-        tempVideo.src = videoUrl;
-        tempVideo.onloadedmetadata = function() {
-            // Batas durasi video 30 detik
-            if (tempVideo.duration > 30) {
-                return Swal.fire('Durasi Kepanjangan', 'Durasi video maksimal adalah 30 detik!', 'error');
-            }
+            const videoUrl = URL.createObjectURL(file);
             
-            // Lanjut render kalau lolos pengecekan
-            renderVideo(videoUrl, 20, 20, 200, 150, file);
-            markAsUnsaved();
-        };
+            // Cek durasi video sebelum diproses
+            const tempVideo = document.createElement('video');
+            tempVideo.preload = 'metadata'; // <--- TAMBAHKAN INI BIAR BROWSER PASTI BACA DURASINYA
+            tempVideo.src = videoUrl;
+            tempVideo.onloadedmetadata = function() {
+                // Batas durasi video 30 detik
+                if (tempVideo.duration > 30) {
+                    return Swal.fire('Durasi Kepanjangan', 'Durasi video maksimal adalah 30 detik!', 'error');
+                }
+                
+                // Lanjut render kalau lolos pengecekan
+                renderVideo(videoUrl, 20, 20, 200, 150, file);
+                markAsUnsaved();
+            };
 
-        input.value = ''; 
+            input.value = ''; 
+        }
     }
-}
 
-function renderVideo(src, x, y, width, height, fileObject = null, existingPath = null) {
-    imgCounter++; // Gunakan counter img yang sama agar id unik
-    const vidId = 'vid-' + imgCounter;
-    const div = document.createElement('div');
-    div.className = 'design-element video-box';
-    div.id = vidId;
-    div.setAttribute('data-x', x);
-    div.setAttribute('data-y', y);
-    div.style.transform = `translate(${x}px, ${y}px)`;
-    div.style.width = `${width}px`;
-    div.style.height = `${height}px`;
+// Tambahkan parameter rotation = 0 di akhir
+    function renderVideo(src, x, y, width, height, fileObject = null, existingPath = null, rotation = 0) {
+        vidCounter++;
+        const vidId = 'vid-' + vidCounter;
+        const div = document.createElement('div');
+        div.className = 'design-element video-box';
+        div.id = vidId;
+        div.setAttribute('data-x', x);
+        div.setAttribute('data-y', y);
+        div.setAttribute('data-rotation', rotation); // Simpan rotasi
+        div.style.transform = `translate(${x}px, ${y}px)`;
+        div.style.width = `${width}px`;
+        div.style.height = `${height}px`;
 
-    if (existingPath) div.setAttribute('data-existing', existingPath);
+        if (existingPath) div.setAttribute('data-existing', existingPath);
 
-    div.innerHTML = `
-        <div class="el-btn-delete" onclick="deleteElement(event, '${vidId}')"><i class="fa-solid fa-xmark"></i></div>
-        <video src="${src}" class="video-content" controls muted loop></video>
-        <div class="el-handle-resize"></div>
-    `;
+        // Tambahkan style transform rotate pada tag video-nya
+        div.innerHTML = `
+            <div class="el-btn-delete" onclick="deleteElement(event, '${vidId}')"><i class="fa-solid fa-xmark"></i></div>
+            <video src="${src}" class="video-content" style="width: 100%; height: 100%; object-fit: cover; transform: rotate(${rotation}deg);" controls></video>
+            <div class="el-handle-resize"></div>
+        `;
 
-    if(fileObject) canvasFiles[vidId] = fileObject;
+        if(fileObject) canvasFiles[vidId] = fileObject;
 
-    div.addEventListener('mousedown', function(e) { setActive(div); });
-    document.getElementById('card-canvas').appendChild(div);
-    setActive(div);
-}
+        div.addEventListener('mousedown', function(e) { setActive(div); });
+        document.getElementById('card-canvas').appendChild(div);
+        
+        setActive(div);
+        document.getElementById('video-rotation').value = rotation; // Set slider ke nilai saat ini
+        markAsUnsaved();
+    }
 
-    function renderImage(src, x, y, width, height, fileObject = null, existingPath = null) {
+    function updateActiveVideo() {
+        if (activeElement && activeElement.classList.contains('video-box')) {
+            const rotation = document.getElementById('video-rotation').value;
+            activeElement.querySelector('.video-content').style.transform = `rotate(${rotation}deg)`;
+            activeElement.setAttribute('data-rotation', rotation);
+            markAsUnsaved();
+        }
+    }
+   // Tambahkan parameter rotation = 0
+    function renderImage(src, x, y, width, height, fileObject = null, existingPath = null, rotation = 0) {
         imgCounter++;
         const imgId = 'img-' + imgCounter;
         const div = document.createElement('div');
@@ -774,15 +857,17 @@ function renderVideo(src, x, y, width, height, fileObject = null, existingPath =
         div.id = imgId;
         div.setAttribute('data-x', x);
         div.setAttribute('data-y', y);
+        div.setAttribute('data-rotation', rotation); // Simpan rotasi
         div.style.transform = `translate(${x}px, ${y}px)`;
         div.style.width = `${width}px`;
         div.style.height = `${height}px`;
 
         if (existingPath) div.setAttribute('data-existing', existingPath);
 
+        // Tambahkan style transform rotate pada img
         div.innerHTML = `
             <div class="el-btn-delete" onclick="deleteElement(event, '${imgId}')"><i class="fa-solid fa-xmark"></i></div>
-            <img src="${src}" class="image-content">
+            <img src="${src}" class="image-content" style="transform: rotate(${rotation}deg);">
             <div class="el-handle-resize"></div>
         `;
 
@@ -790,7 +875,19 @@ function renderVideo(src, x, y, width, height, fileObject = null, existingPath =
 
         div.addEventListener('mousedown', function(e) { setActive(div); });
         document.getElementById('card-canvas').appendChild(div);
+        
         setActive(div);
+        document.getElementById('image-rotation').value = rotation; // Set value slider default
+        markAsUnsaved();
+    }
+
+    function updateActiveImage() {
+        if (activeElement && activeElement.classList.contains('image-box')) {
+            const rotation = document.getElementById('image-rotation').value;
+            activeElement.querySelector('.image-content').style.transform = `rotate(${rotation}deg)`;
+            activeElement.setAttribute('data-rotation', rotation);
+            markAsUnsaved();
+        }
     }
 
     // ----- FITUR VOICE NOTE -----
@@ -935,19 +1032,19 @@ function renderVideo(src, x, y, width, height, fileObject = null, existingPath =
 
             if(desainData.texts) {
                 desainData.texts.forEach(t => {
-                    addText(t.text, t.position_x, t.position_y, t.font, t.color, t.size, t.width, t.height);
+                    addText(t.text, t.position_x, t.position_y, t.font, t.color, t.size, t.width, t.height, t.rotation);
                 });
             }
 
             if(desainData.images) {
                 desainData.images.forEach(img => {
-                    renderImage(`/${img.image}`, img.position_x, img.position_y, img.width, img.height, null, img.image);
+                    renderImage(`/${img.image}`, img.position_x, img.position_y, img.width, img.height, null, img.image, img.rotation);
                 });
             }
 
             if(desainData.videos) {
                 desainData.videos.forEach(vid => {
-                    renderVideo(`/${vid.video}`, vid.position_x, vid.position_y, vid.width, vid.height, null, vid.video);
+                    renderVideo(`/${vid.video}`, vid.position_x, vid.position_y, vid.width, vid.height, null, vid.video, vid.rotation);
                 });
             }
 
@@ -974,21 +1071,76 @@ function renderVideo(src, x, y, width, height, fileObject = null, existingPath =
 
     // ----- SIMPAN DATA -----
     // ----- SIMPAN DATA -----
-    async function saveDesign() {
-        const slug = document.getElementById('slug-input').value;
-        if (!slug) return Swal.fire('Oops!', 'Harap isi URL/Slug untuk kartu!', 'warning');
+    document.getElementById('slug-input').addEventListener('input', function() {
+    this.classList.remove('input-error-shake');
+    document.getElementById('slug-error-hint').classList.add('d-none');
+});
+document.getElementById('judul-input').addEventListener('input', function() {
+    this.classList.remove('input-error-shake');
+    document.getElementById('judul-error-hint').classList.add('d-none');
+});
+
+// ----- SIMPAN DATA -----
+async function saveDesign() {
+    const slugInput = document.getElementById('slug-input');
+    const judulInput = document.getElementById('judul-input');
+    const slug = slugInput.value.trim();
+    const judulValue = judulInput.value.trim();
+
+    // 1. Reset Error State dulu
+    slugInput.classList.remove('input-error-shake');
+    judulInput.classList.remove('input-error-shake');
+    document.getElementById('slug-error-hint').classList.add('d-none');
+    document.getElementById('judul-error-hint').classList.add('d-none');
+
+    // 2. Logika Jika Slug Kosong
+    if (!slug) {
+        slugInput.classList.add('input-error-shake');
+        document.getElementById('slug-error-hint').classList.remove('d-none');
         
-        // Cek validasi Wajib
-        const judulValue = document.getElementById('judul-input').value.trim();
-        if (!judulValue) {
-            return Swal.fire('Peringatan!', 'Judul Kartu pada menu Pengaturan tidak boleh kosong!', 'warning');
-        }
+        // Auto Scroll ke atas & fokus
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setTimeout(() => slugInput.focus(), 400);
 
-        document.getElementById('btn-save').innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
-        document.getElementById('btn-save').disabled = true;
+        Swal.fire({
+            toast: true, position: 'top-end', icon: 'warning',
+            title: 'Ups! Slug/URL belum diisi.', showConfirmButton: false, timer: 3000
+        });
+        return; // Stop proses simpan
+    }
 
-        // 1. DEKLARASIKAN FORM DATA DI SINI (SEBELUM APPEND)
-        const formData = new FormData();
+    // 3. Logika Jika Judul Kosong (Otomatis Buka Modal)
+    if (!judulValue) {
+        const metaModalEl = document.getElementById('metaModal');
+        let metaModal = bootstrap.Modal.getInstance(metaModalEl);
+        if (!metaModal) metaModal = new bootstrap.Modal(metaModalEl);
+        
+        metaModal.show(); // Buka Modal Paksa
+
+        // Tunggu animasi modal selesai baru kasih getar & fokus
+        metaModalEl.addEventListener('shown.bs.modal', function onModalShown() {
+            judulInput.classList.add('input-error-shake');
+            document.getElementById('judul-error-hint').classList.remove('d-none');
+            judulInput.focus();
+            
+            // Hapus event listener biar gak ke-trigger berkali-kali
+            metaModalEl.removeEventListener('shown.bs.modal', onModalShown);
+        });
+
+        Swal.fire({
+            toast: true, position: 'top-end', icon: 'warning',
+            title: 'Ups! Judul kartu kelupaan.', showConfirmButton: false, timer: 3000
+        });
+        return; // Stop proses simpan
+    }
+
+    // ===============================================
+    // JIKA AMAN, LANJUTKAN PROSES SIMPAN SEPERTI BIASA
+    // ===============================================
+    document.getElementById('btn-save').innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
+    document.getElementById('btn-save').disabled = true;
+
+    const formData = new FormData();
         
         // 2. MASUKKAN SEMUA DATA
         formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
@@ -1028,6 +1180,7 @@ function renderVideo(src, x, y, width, height, fileObject = null, existingPath =
                 font: textNode.style.fontFamily,
                 color: textNode.style.color,
                 size: parseFloat(textNode.style.fontSize) || 20,
+                rotation: parseFloat(el.getAttribute('data-rotation')) || 0,
                 x: parseFloat(el.getAttribute('data-x')) || 0,
                 y: parseFloat(el.getAttribute('data-y')) || 0,
                 width: parseFloat(el.style.width) || null,
@@ -1046,6 +1199,7 @@ function renderVideo(src, x, y, width, height, fileObject = null, existingPath =
                 y: parseFloat(el.getAttribute('data-y')) || 0,
                 width: parseFloat(el.style.width) || 150,
                 height: parseFloat(el.style.height) || 150,
+                rotation: parseFloat(el.getAttribute('data-rotation')) || 0,
                 existing_path: el.getAttribute('data-existing') || null
             };
             
@@ -1067,6 +1221,7 @@ function renderVideo(src, x, y, width, height, fileObject = null, existingPath =
                 y: parseFloat(el.getAttribute('data-y')) || 0,
                 width: parseFloat(el.style.width) || 200,
                 height: parseFloat(el.style.height) || 150,
+                rotation: parseFloat(el.getAttribute('data-rotation')) || 0,
                 existing_path: el.getAttribute('data-existing') || null
             };
             
@@ -1117,38 +1272,65 @@ function renderVideo(src, x, y, width, height, fileObject = null, existingPath =
         }
 
         try {
-            const response = await fetch("{{ route('desain.store') }}", {
-                method: 'POST',
-                body: formData,
-                headers: { 'X-Requested-With': 'XMLHttpRequest','Accept': 'application/json', 'ngrok-skip-browser-warning': '69420' }
-            });
-            const result = await response.json();
-            
-             if (response.ok) {
-            hasUnsavedChanges = false; 
-            
-            // 1. Tampilkan Toast Bootstrap (Sukses)
-            const toastEl = document.getElementById('successToast');
-            const toast = new bootstrap.Toast(toastEl);
-            toast.show();
-
-            // 2. Langsung otomatis buka Modal QR & Share
-            openShareModal();
-        } else {
-                let errors = '';
-                for(let key in result.errors) errors += result.errors[key][0] + '\n';
-                Swal.fire('Error', errors || 'Terjadi kesalahan sistem.', 'error');
-            }
-        } catch (error) {
-            Swal.fire('Error', 'Gagal terhubung ke server.', 'error');
-        } finally {
-            if(hasUnsavedChanges) { 
-                document.getElementById('btn-save').innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span class="d-none d-sm-inline">Simpan*</span>';
-            } else {
-                document.getElementById('btn-save').innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span class="d-none d-sm-inline">Simpan</span>';
-            }
-            document.getElementById('btn-save').disabled = false;
+    const response = await fetch("{{ route('desain.store') }}", {
+        method: 'POST',
+        body: formData,
+        headers: { 
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json', 
+            'ngrok-skip-browser-warning': '69420' 
         }
+    });
+
+    // 1. CEK ERROR DARI SERVER DULU SEBELUM DI-PARSE KE JSON
+    if (!response.ok) {
+        const errortext = await response.text(); 
+        console.error("🔥 ERROR ASLI DARI LARAVEL:\n\n", errortext);
+
+        try {
+            // Coba lihat apakah error-nya berupa JSON (misal validasi dari Laravel)
+            const errorJson = JSON.parse(errortext);
+            let errors = '';
+            if (errorJson.errors) {
+                for(let key in errorJson.errors) errors += errorJson.errors[key][0] + '\n';
+            }
+            // Lempar error ke blok catch
+            throw new Error(errors || errorJson.message || "Terjadi kesalahan di server.");
+        } catch (parseError) {
+            // Jika masuk ke sini, berarti server mengembalikan HTML (Syntax Error PHP / 500 Server Error)
+            throw new Error("Pesan Error PHP! Silakan tekan F12 dan buka tab 'Console' untuk melihat detail aslinya.");
+        }
+    }
+
+    // 2. JIKA SUKSES, BARU BACA SEBAGAI JSON
+    const result = await response.json();
+    
+    hasUnsavedChanges = false; 
+    
+    // 3. Tampilkan Toast Bootstrap (Sukses)
+    const toastEl = document.getElementById('successToast');
+    if (toastEl) {
+        const toast = new bootstrap.Toast(toastEl);
+        toast.show();
+    }
+
+    // 4. Langsung otomatis buka Modal QR & Share
+    if (typeof openShareModal === "function") {
+        openShareModal();
+    }
+
+} catch (error) {
+    // SEKARANG ERROR ASLINYA AKAN MUNCUL DI SINI
+    console.error("Kesalahan Fetch:", error);
+    Swal.fire('Error', error.message, 'error');
+} finally {
+    if(hasUnsavedChanges) { 
+        document.getElementById('btn-save').innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span class="d-none d-sm-inline">Simpan*</span>';
+    } else {
+        document.getElementById('btn-save').innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span class="d-none d-sm-inline">Simpan</span>';
+    }
+    document.getElementById('btn-save').disabled = false;
+}
     }
     function rgbToHex(rgb) {
         if(rgb.startsWith('#')) return rgb;

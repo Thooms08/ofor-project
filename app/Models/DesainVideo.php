@@ -20,6 +20,7 @@ class DesainVideo extends Model
         'position_y',
         'width',
         'height',
+        'rotation',
     ];
 
     /**

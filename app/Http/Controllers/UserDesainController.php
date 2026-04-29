@@ -143,6 +143,7 @@ class UserDesainController extends Controller
                         'font' => $t['font'],
                         'color' => $t['color'],
                         'size' => $t['size'] ?? 20,
+                        'rotation' => $t['rotation'] ?? 0,
                         'width' => $t['width'] ?? null,
                         'height' => $t['height'] ?? null,
                         'position_x' => $t['x'],
@@ -175,6 +176,7 @@ class UserDesainController extends Controller
                         'position_y' => $data['y'],
                         'width' => $data['width'] ?? 150,
                         'height' => $data['height'] ?? 150,
+                        'rotation' => $data['rotation'] ?? 0,
                     ]);
                 }
             }
@@ -207,6 +209,7 @@ class UserDesainController extends Controller
                         'position_y' => $data['y'],
                         'width' => $data['width'] ?? 200,
                         'height' => $data['height'] ?? 150,
+                        'rotation' => $data['rotation'] ?? 0,
                     ]);
                 }
             }
