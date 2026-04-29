@@ -41,6 +41,12 @@
             --sp-lg: 24px;
         }
         
+        /* FIX HORIZONTAL SCROLL & PADDING BOCOR DI SINI */
+        html, body {
+            overflow-x: hidden !important; 
+            width: 100%;
+        }
+
         body {
             font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             color: #333;
@@ -181,16 +187,15 @@
         }
 
         /* PWA Install Button */
-        /* PWA Install Button */
         #pwa-install-btn {
             position: fixed;
-            bottom: var(--sp-lg); /* Jarak dari bawah */
+            bottom: var(--sp-lg);
             left: 0;
             right: 0;
-            margin: 0 auto; /* Otomatis ke tengah */
-            width: max-content; /* Memastikan lebar tombol sesuai teksnya */
+            margin: 0 auto;
+            width: max-content;
             z-index: 9999;
-            display: none; /* Hidden by default */
+            display: none;
             border-radius: 50px;
             padding: 12px 24px;
             background: var(--primary-purple);
@@ -249,13 +254,11 @@
                     </li>
                 </ul>
                 <div class="d-flex flex-column flex-lg-row align-items-center gap-2 mt-3 mt-lg-0">
-                    {{-- Jika belum login (guest), tampilkan tombol Login & Register --}}
                     @guest
                         <a href="{{route('login')}}" class="btn btn-outline-purple w-100 w-lg-auto">Login</a>
                         <a href="{{route('register')}}" class="btn btn-purple w-100 w-lg-auto">Register</a>
                     @endguest
 
-                    {{-- Jika sudah login (auth), tampilkan tombol Dashboard & Logout --}}
                     @auth
                         <a href="{{route('user.dashboard')}}" class="btn btn-outline-purple w-100 w-lg-auto">Dashboard</a>
                         <form action="{{ route('logout') }}" method="POST" class="w-100 w-lg-auto m-0">

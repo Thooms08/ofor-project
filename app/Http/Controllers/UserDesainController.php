@@ -55,7 +55,7 @@ class UserDesainController extends Controller
     public function index($slug = null) {
         $desain = null;
         if ($slug) {
-            $desain = Desain::with(['texts', 'images', 'videos'])
+            $desain = Desain::with(['texts', 'images', 'videos', 'icons', 'elements'])
                         ->where('slug', $slug)
                         ->where('user_id', Auth::id())
                         ->firstOrFail(); 
@@ -130,6 +130,8 @@ class UserDesainController extends Controller
         $desain->texts()->delete();
         $desain->images()->delete();
         $desain->videos()->delete();
+        $desain->icons()->delete();
+        $desain->elements()->delete();
         
         // 3. Simpan Teks
         if ($request->filled('texts_data')) {
@@ -210,6 +212,38 @@ class UserDesainController extends Controller
             }
         }
 
+        if ($request->filled('icons_data')) {
+            $icons = json_decode($request->icons_data, true);
+            if (is_array($icons)) {
+                foreach ($icons as $i) {
+                    $desain->icons()->create([
+                        'icon_name'  => $i['icon_name'],
+                        'color'      => $i['color'],
+                        'size'       => $i['size'] ?? 50,
+                        'rotation'   => $i['rotation'] ?? 0,
+                        'position_x' => $i['x'],
+                        'position_y' => $i['y'],
+                    ]);
+                }
+            }
+        }
+
+        if ($request->filled('elements_data')) {
+            $elements = json_decode($request->elements_data, true);
+            if (is_array($elements)) {
+                foreach ($elements as $el) {
+                    $desain->elements()->create([
+                        'type' => $el['type'],
+                        'color' => $el['color'],
+                        'size' => $el['size'] ?? 100,
+                        'rotation' => $el['rotation'] ?? 0,
+                        'position_x' => $el['x'],
+                        'position_y' => $el['y'],
+                    ]);
+                }
+            }
+        }
+
         return response()->json([
             'success' => true, 
             'message' => 'Desain berhasil disimpan!',
@@ -233,7 +267,9 @@ class UserDesainController extends Controller
 }
 
     public function show($slug) {
-        $desain = Desain::with(['texts', 'images', 'videos'])->where('slug', $slug)->firstOrFail();
+        $desain = Desain::with(['texts', 'images', 'videos', 'icons', 'elements'])
+        ->where('slug', $slug)
+        ->firstOrFail();
         return view('user.show_kartu', compact('desain'));
     }
 
@@ -241,7 +277,7 @@ class UserDesainController extends Controller
     {
         // Cari desain berdasarkan slug dan pastikan itu milik user yang sedang login
         // TAMBAHKAN with() UNTUK MEMANGGIL RELASI KONTENNYA
-        $desain = Desain::with(['texts', 'images', 'videos']) 
+        $desain = Desain::with(['texts', 'images', 'videos', 'icons', 'elements']) 
                         ->where('slug', $slug)
                         ->where('user_id', Auth::id())
                         ->firstOrFail(); 

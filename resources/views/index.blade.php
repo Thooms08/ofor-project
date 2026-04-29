@@ -107,7 +107,7 @@
     <div class="carousel-inner">
         <div class="carousel-item active">
             <div class="container hero-slide-container">
-                <div class="row align-items-center w-100 g-5">
+                <div class="row align-items-center g-5">
                     <div class="col-lg-6 text-center text-lg-start z-1">
                         <span class="badge bg-white text-purple px-3 py-2 rounded-pill mb-4 shadow-sm fw-bold tracking-wide">
                             <i class="bi bi-stars me-1"></i> #1 Platform Kartu Online
@@ -132,7 +132,7 @@
 
         <div class="carousel-item">
             <div class="container hero-slide-container">
-                <div class="row align-items-center w-100 g-5">
+                <div class="row align-items-center g-5">
                     <div class="col-lg-6 text-center text-lg-start z-1">
                         <span class="badge bg-white text-purple px-3 py-2 rounded-pill mb-4 shadow-sm fw-bold tracking-wide">
                             <i class="bi bi-heart-fill me-1 text-danger"></i> Unik & Personal

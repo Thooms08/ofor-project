@@ -17,6 +17,14 @@ class Desain extends Model
     }
 
     public function videos() {
-    return $this->hasMany(DesainVideo::class);
-}
+        return $this->hasMany(DesainVideo::class);
+    }
+    public function icons() {
+        return $this->hasMany(DesainIcon::class); // Pastikan kamu membuat Model DesainIcon.php juga
+    }
+
+    public function elements()
+    {
+        return $this->hasMany(DesainElement::class);
+    }
 }

@@ -16,6 +16,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Amatic+SC:wght@700&family=Bebas+Neue&family=Bitter:wght@400;600&family=Caveat:wght@600&family=Cinzel:wght@600&family=Comic+Neue:wght@700&family=Cookie&family=Courgette&family=Crimson+Text:wght@600&family=Dancing+Script:wght@600&family=EB+Garamond:wght@600&family=Fredoka:wght@500&family=Great+Vibes&family=Inter:wght@400;600&family=Josefin+Slab:wght@600&family=Kaushan+Script&family=Lato:wght@400;700&family=Lobster&family=Lora:wght@500;600&family=Merriweather:wght@400;700&family=Montserrat:wght@500;700&family=Noto+Serif:wght@400;700&family=Nunito:wght@600;700&family=Open+Sans:wght@400;600&family=Oswald:wght@500&family=Pacifico&family=Patrick+Hand&family=Playfair+Display:wght@600;700&family=Poppins:wght@400;500;600&family=PT+Serif:wght@400;700&family=Quicksand:wght@600&family=Raleway:wght@600&family=Righteous&family=Roboto:wght@400;500;700&family=Rubik:wght@400;500&family=Sacramento&family=Satisfy&family=Ubuntu:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="icon" type="image/jpeg" href="{{ asset('logo-ofor.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('logo-ofor.png') }}">
         
@@ -143,6 +145,14 @@
         border-color: var(--primary-purple);
         background-color: var(--light-purple);
     }
+
+        /* Shape Styling */
+    .shape-content { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; pointer-events: none;}
+    .shape-content svg { width: 100%; height: 100%; transition: fill 0.2s; }
+    .shape-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 15px; }
+    .shape-item { background: white; border: 1px solid #ddd; border-radius: 10px; padding: 15px; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; aspect-ratio: 1; }
+    .shape-item:hover { border-color: var(--purple-primary); box-shadow: 0 4px 10px rgba(126,34,206,0.15); transform: translateY(-3px); }
+    .shape-item svg { width: 100%; height: 100%; fill: var(--purple-dark); }
     </style>
 </head>
 <body>
@@ -161,12 +171,15 @@
         </div>
 
         <div class="d-flex gap-2">
-            <button class="btn btn-warning btn-sm fw-bold text-dark px-2 px-sm-3 shadow-sm text-nowrap" onclick="openShareModal()">
+            
+            <button class="btn btn-warning btn-sm fw-bold text-dark px-2 px-sm-3 shadow-sm text-nowrap" onclick="shareCard()">
                 <i class="fa-solid fa-share-nodes"></i> <span class="d-none d-sm-inline">Bagikan</span>
             </button>
+
             <button class="btn btn-light btn-sm fw-bold text-purple-dark px-2 px-sm-3 shadow-sm text-nowrap me-2" data-bs-toggle="modal" data-bs-target="#metaModal">
                 <i class="fa-solid fa-gear"></i> <span class="d-none d-sm-inline">Pengaturan</span>
             </button>
+            
             <button class="btn btn-light btn-sm fw-bold text-purple-dark px-2 px-sm-3 shadow-sm text-nowrap" onclick="saveDesign()" id="btn-save">
                <i class="fa-solid fa-floppy-disk"></i><span class="d-none d-sm-inline"> Simpan</span>
             </button>
@@ -276,6 +289,35 @@
                 <i class="fa-solid fa-microphone"></i> Rekam Suara
             </button>
         </div>
+        <div class="toolbar-group">
+            <input type="color" id="icon-color" class="form-control form-control-color form-control-sm border-0 p-0 m-0 shadow-sm" value="#7e22ce" onchange="updateActiveIcon()" title="Warna Icon">
+            
+            <div class="d-flex align-items-center gap-1 mx-1" style="width: 70px;">
+                <i class="fa-solid fa-expand text-white-50" style="font-size: 11px;" title="Ukuran Icon"></i>
+                <input type="range" class="form-range" id="icon-size" min="20" max="300" value="60" oninput="updateActiveIcon()" title="Ukuran Icon">
+            </div>
+
+            <div class="d-flex align-items-center gap-1 mx-1" style="width: 70px;">
+                <i class="fa-solid fa-rotate-right text-white-50" style="font-size: 11px;" title="Rotasi Icon"></i>
+                <input type="range" class="form-range" id="icon-rotation" min="0" max="360" value="0" oninput="updateActiveIcon()" title="Rotasi Icon">
+            </div>
+
+            <button class="btn btn-sm btn-custom fw-bold text-nowrap" data-bs-toggle="modal" data-bs-target="#iconModal">
+                <i class="fa-solid fa-icons"></i> Icon
+            </button>
+        </div>
+        <div class="toolbar-group">
+            <button class="btn btn-sm btn-warning fw-bold text-nowrap text-dark" data-bs-toggle="modal" data-bs-target="#elementModal"><i class="fa-solid fa-shapes"></i> Element</button>
+            <input type="color" id="element-color" class="form-control form-control-color form-control-sm border-0 p-0 m-0 shadow-sm" value="#7e22ce" onchange="updateActiveShape()" title="Warna Element">
+            <div class="d-flex align-items-center gap-1 mx-1" style="width: 50px;">
+                <i class="fa-solid fa-expand text-white-50" style="font-size: 11px;"></i>
+                <input type="range" class="form-range" id="element-size" min="20" max="400" value="100" oninput="updateActiveShape()">
+            </div>
+            <div class="d-flex align-items-center gap-1 mx-1" style="width: 50px;">
+                <i class="fa-solid fa-rotate-right text-white-50" style="font-size: 11px;"></i>
+                <input type="range" class="form-range" id="element-rotation" min="0" max="360" value="0" oninput="updateActiveShape()">
+            </div>
+        </div>
 
     </div>
 </div>
@@ -293,19 +335,21 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body text-center pt-2 pb-4">
-        <p class="text-muted small mb-3">Scan QR di bawah ini atau salin tautan.</p>
+        <p class="text-muted small mb-3">Scan QR di bawah ini atau bagikan langsung.</p>
         
         <div id="qrcode-container" class="d-flex justify-content-center mb-3 bg-white p-2 rounded border"></div>
         
-        <div class="input-group input-group-sm mb-3">
-            <input type="text" id="share-link-result" class="form-control bg-light" readonly>
-            <button class="btn btn-primary" onclick="copyShareLink()" title="Salin Tautan">
-                <i class="fa-regular fa-copy"></i>
+        <div class="d-flex gap-2 mb-3">
+            <button class="btn btn-primary btn-sm flex-fill fw-bold shadow-sm" onclick="shareCard()">
+                <i class="fa-solid fa-share-nodes"></i> Bagikan Ke...
+            </button>
+            <button class="btn btn-success btn-sm flex-fill fw-bold shadow-sm" onclick="downloadCard(this)">
+                <i class="fa-solid fa-image"></i> Download Kartu
             </button>
         </div>
         
-        <button class="btn btn-success btn-sm w-100 fw-bold" onclick="downloadQR()">
-            <i class="fa-solid fa-download"></i> Download QR Code
+        <button class="btn btn-outline-secondary btn-sm w-100 fw-bold" onclick="downloadQR()">
+            <i class="fa-solid fa-qrcode"></i> Download QR Code
         </button>
       </div>
     </div>
@@ -361,6 +405,45 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="iconModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content border-0 shadow-lg" style="border-radius: 16px;">
+      <div class="modal-header bg-purple text-white border-0 py-3">
+        <h5 class="modal-title fw-bold"><i class="fa-solid fa-icons me-2"></i> Pilih Icon</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body bg-light text-center p-4">
+          <div class="d-flex flex-wrap justify-content-center gap-3" id="icon-list">
+              </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="elementModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+    <div class="modal-content border-0 shadow-lg" style="border-radius: 16px;">
+      <div class="modal-header bg-warning text-dark border-0 py-3">
+        <h5 class="modal-title fw-bold"><i class="fa-solid fa-shapes me-2"></i> Pilih Element</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body bg-light p-4">
+          <div class="shape-grid" id="element-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999;">
+  <div id="successToast" class="toast align-items-center text-white bg-success border-0 shadow-lg" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
+    <div class="d-flex">
+      <div class="toast-body fw-bold d-flex align-items-center">
+        <i class="fa-solid fa-check-circle me-2 fs-5"></i> 
+        <span>Desain kartu berhasil disimpan!</span>
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+  </div>
+</div>
 <script>
     // ----- VARIABEL STATE & SISTEM -----
     let hasUnsavedChanges = false;
@@ -377,6 +460,83 @@
     const MAX_RECORD_SECONDS = 1800;
     // --- FITUR AUTO-ZOOM CANVA-STYLE ---
     let currentScale = 1; // Skala default
+    const iconList = [
+    'mdi:heart', 'mdi:star', 'mdi:check-circle', 'mdi:account', 'mdi:email', 'mdi:camera', 
+    'mdi:bell', 'mdi:settings', 'mdi:magnify', 'mdi:home', 'mdi:music', 'mdi:video', 
+    'mdi:flower', 'mdi:fire', 'mdi:water', 'mdi:earth', 'mdi:airplane', 'mdi:car', 
+    'mdi:bike', 'mdi:cart', 'mdi:gift', 'mdi:cake', 'mdi:coffee', 'mdi:food', 
+    'mdi:laptop', 'mdi:cellphone', 'mdi:gamepad', 'mdi:book', 'mdi:pencil', 'mdi:briefcase'
+];
+
+let shapeCounter = 0;
+const shapeDictionary = {
+    // --- BENTUK DASAR YANG SUDAH ADA ---
+    'rectangle': '<rect width="100" height="100" />',
+    'circle': '<circle cx="50" cy="50" r="50" />',
+    'triangle': '<polygon points="50,0 100,100 0,100" />',
+    'star': '<polygon points="50,5 61,35 98,35 68,57 79,91 50,70 21,91 32,57 2,35 39,35" />',
+    'blob1': '<path d="M74,22 C84,33 90,49 84,62 C78,74 58,82 41,83 C24,84 10,78 4,63 C-2,48 4,24 17,14 C29,4 47,-1 61,7 C75,15 84,11 74,22 Z" />',
+    'blob2': '<path d="M82,28 C89,40 85,55 76,66 C67,77 53,84 39,81 C25,78 12,65 7,50 C2,35 8,18 20,9 C31,0 49,-1 63,6 C77,13 74,15 82,28 Z" />',
+
+    // --- TAMBAHAN 30 BENTUK BARU ---
+    // 1. Geometri Lanjutan
+    'pentagon': '<polygon points="50,0 100,38 82,100 18,100 0,38" />',
+    'hexagon': '<polygon points="50,0 93,25 93,75 50,100 7,75 7,25" />',
+    'heptagon': '<polygon points="50,0 89,19 99,60 72,97 28,97 1,60 11,19" />',
+    'octagon': '<polygon points="30,0 70,0 100,30 100,70 70,100 30,100 0,70 0,30" />',
+    'decagon': '<polygon points="50,0 79,10 98,35 98,65 79,90 50,100 21,90 2,65 2,35 21,10" />',
+    'rhombus': '<polygon points="50,0 100,50 50,100 0,50" />',
+    'parallelogram': '<polygon points="20,0 100,0 80,100 0,100" />',
+    'trapezoid': '<polygon points="20,0 80,0 100,100 0,100" />',
+    'diamond': '<polygon points="50,0 80,50 50,100 20,50" />',
+
+    // 2. Simbol Populer
+    'heart': '<path d="M50,88 C100,60 100,20 50,40 C0,20 0,60 50,88 Z" />',
+    'moon': '<path d="M80,50 C80,77 58,100 31,100 C15,100 0,91 0,91 C27,88 49,66 49,38 C49,23 41,9 41,9 C64,13 80,30 80,50 Z" />',
+    'droplet': '<path d="M50,0 C50,0 10,50 10,70 C10,92 28,100 50,100 C72,100 90,92 90,70 C90,50 50,0 50,0 Z" />',
+    'cloud': '<path d="M30,40 C30,20 60,20 70,30 C90,30 90,60 80,70 C90,80 70,100 50,90 C30,100 10,80 20,70 C0,60 0,30 30,40 Z" />',
+    'cross': '<polygon points="35,0 65,0 65,35 100,35 100,65 65,65 65,100 35,100 35,65 0,65 0,35 35,35" />',
+    'shield': '<path d="M10,0 L90,0 L90,50 C90,80 50,100 50,100 C50,100 10,80 10,50 Z" />',
+
+    // 3. UI / Elemen Ornamen Desain
+    'pill': '<rect x="10" y="25" width="80" height="50" rx="25" ry="25" />',
+    'arch': '<path d="M20,100 L20,50 C20,20 80,20 80,50 L80,100 Z" />',
+    'message': '<path d="M0,20 C0,9 9,0 20,0 L80,0 C91,0 100,9 100,20 L100,70 C100,81 91,90 80,90 L40,90 L10,100 L15,78 C6,70 0,58 0,45 Z" />',
+    'bookmark': '<polygon points="20,0 80,0 80,100 50,75 20,100" />',
+    'badge': '<path d="M50,10 L80,25 L80,75 L50,90 L20,75 L20,25 Z M50,0 L90,20 L90,80 L50,100 L10,80 L10,20 Z" />',
+    'ticket': '<path d="M0,10 L100,10 L100,40 A10,10 0 0,0 100,60 L100,90 L0,90 L0,60 A10,10 0 0,0 0,40 Z" />',
+    'banner': '<polygon points="0,20 100,20 100,80 0,80 15,50" />',
+    'ribbon': '<path d="M10,90 L30,50 L10,10 L90,10 L70,50 L90,90 Z" />',
+    
+    // 4. Arah (Panah)
+    'arrow-right': '<polygon points="0,35 60,35 60,15 100,50 60,85 60,65 0,65" />',
+    'arrow-left': '<polygon points="100,35 40,35 40,15 0,50 40,85 40,65 100,65" />',
+    'arrow-up': '<polygon points="35,100 35,40 15,40 50,0 85,40 65,40 65,100" />',
+    'arrow-down': '<polygon points="35,0 35,60 15,60 50,100 85,60 65,60 65,0" />',
+
+    // 5. Dekoratif / Abstrak
+    'wave': '<path d="M0,50 C20,20 40,80 60,50 C80,20 100,50 100,50 L100,100 L0,100 Z" />',
+    'zigzag': '<polygon points="0,50 20,20 40,80 60,20 80,80 100,50 100,100 0,100" />',
+    'blob3': '<path d="M78,25 C88,38 96,55 88,68 C80,81 57,90 38,85 C19,80 4,61 1,44 C-2,27 9,12 24,5 C39,-2 58,-1 68,12 C78,25 68,12 78,25 Z" />',
+    'blob4': '<path d="M70,18 C83,28 97,42 94,56 C91,70 70,84 53,88 C36,92 23,86 13,73 C3,60 -4,40 2,24 C8,8 24,-4 40,-2 C56,0 57,8 70,18 Z" />',
+    'blob5': '<path d="M68,23 C79,35 84,52 76,65 C68,78 46,87 29,80 C12,73 0,50 3,33 C6,16 23,5 40,2 C57,-1 57,11 68,23 Z" />'
+};
+
+// Merender list icon ke modal saat load
+document.addEventListener("DOMContentLoaded", function() {
+    const iconContainer = document.getElementById('icon-list');
+    iconList.forEach(icon => {
+        let btn = document.createElement('button');
+        btn.className = 'btn btn-outline-secondary d-flex align-items-center justify-content-center p-2 shadow-sm bg-white';
+        btn.style.width = '50px'; btn.style.height = '50px'; btn.style.borderRadius = '12px';
+        btn.innerHTML = `<iconify-icon icon="${icon}" style="font-size: 28px; color: #581c87;"></iconify-icon>`;
+        btn.onclick = () => {
+            addIcon(icon);
+            bootstrap.Modal.getInstance(document.getElementById('iconModal')).hide();
+        };
+        iconContainer.appendChild(btn);
+    });
+});
 
     function autoZoomCanvas() {
         const container = document.getElementById('canvas-area');
@@ -469,6 +629,11 @@
             document.getElementById('font-family').value = textNode.style.fontFamily || "'Inter', sans-serif";
             document.getElementById('text-color').value = rgbToHex(textNode.style.color || window.getComputedStyle(textNode).color);
             document.getElementById('text-size').value = parseInt(window.getComputedStyle(textNode).fontSize) || 20;
+        }else 
+        if (el.classList.contains('shape-box')) {
+            document.getElementById('element-color').value = rgbToHex(el.style.color);
+            document.getElementById('element-rotation').value = el.getAttribute('data-rotation');
+            document.getElementById('element-size').value = parseFloat(el.style.width);
         }
     }
 
@@ -721,21 +886,35 @@ function renderVideo(src, x, y, width, height, fileObject = null, existingPath =
             end(event) { markAsUnsaved(); }
         }
     })
-    .resizable({
+   .resizable({
         edges: { left: false, right: '.el-handle-resize', bottom: '.el-handle-resize', top: false },
         listeners: {
             move(event) {
                 const target = event.target;
                 
-                // KUNCI RESIZE RESPONSIVITAS:
                 let currentWidth = parseFloat(target.style.width) || target.offsetWidth;
                 let currentHeight = parseFloat(target.style.height) || target.offsetHeight;
                 
                 let newWidth = currentWidth + (event.deltaRect.width / currentScale);
                 let newHeight = currentHeight + (event.deltaRect.height / currentScale);
 
-                target.style.width = `${newWidth}px`;
-                target.style.height = `${newHeight}px`;
+                if (target.classList.contains('icon-box') || target.classList.contains('shape-box')) {
+                    // PERBAIKAN: Gunakan newWidth, bukan nw
+                    target.style.width = `${newWidth}px`; 
+                    target.style.height = `${newWidth}px`;
+                    
+                    if(target.classList.contains('icon-box')) {
+                        target.querySelector('iconify-icon').style.fontSize = `${newWidth}px`;
+                        if (target.classList.contains('active-element')) document.getElementById('icon-size').value = newWidth;
+                    } else {
+                        if (target.classList.contains('active-element')) document.getElementById('element-size').value = newWidth;
+                    }
+                }
+                // JIKA OBJEK ADALAH TEKS/GAMBAR/VIDEO biasa:
+                else {
+                    target.style.width = `${newWidth}px`;
+                    target.style.height = `${newHeight}px`;
+                }
             },
             end(event) { markAsUnsaved(); }
         }
@@ -774,6 +953,16 @@ function renderVideo(src, x, y, width, height, fileObject = null, existingPath =
 
             if(desainData.voice) {
                 createVoiceElement(`/${desainData.voice}`, desainData.voice_pos_x, desainData.voice_pos_y);
+            }
+
+            if(desainData.icons) {
+                    desainData.icons.forEach(i => {
+                        addIcon(i.icon_name, i.position_x, i.position_y, i.color, i.size, i.rotation);
+                    });
+                }
+
+            if(desainData.elements) {
+                desainData.elements.forEach(e => addShape(e.type, e.position_x, e.position_y, e.color, e.size, e.rotation));
             }
 
             setTimeout(() => { 
@@ -889,6 +1078,34 @@ function renderVideo(src, x, y, width, height, fileObject = null, existingPath =
         });
         formData.append('canvas_videos_data', JSON.stringify(canvasVideos));
 
+        // Extract Icons
+        const savedIcons = [];
+        document.querySelectorAll('.icon-box').forEach(el => {
+            savedIcons.push({
+                icon_name: el.getAttribute('data-icon-name'),
+                color: rgbToHex(el.style.color),
+                size: parseFloat(el.style.width) || 60,
+                rotation: parseFloat(el.getAttribute('data-rotation')) || 0,
+                x: parseFloat(el.getAttribute('data-x')) || 0,
+                y: parseFloat(el.getAttribute('data-y')) || 0
+            });
+        });
+        formData.append('icons_data', JSON.stringify(savedIcons));
+
+        // ELEMENTS (SHAPES)
+        const elements = []; 
+        document.querySelectorAll('.shape-box').forEach(el => {
+            elements.push({ 
+                type: el.getAttribute('data-shape-type'), 
+                color: rgbToHex(el.style.color), 
+                size: parseFloat(el.style.width)||100, 
+                rotation: parseFloat(el.getAttribute('data-rotation'))||0, 
+                x: parseFloat(el.getAttribute('data-x'))||0, 
+                y: parseFloat(el.getAttribute('data-y'))||0 
+            });
+        }); 
+        formData.append('elements_data', JSON.stringify(elements));
+
         // Extract Voice
         if (audioBlob) {
             formData.append('voice', audioBlob, 'voice-note.mp3');
@@ -908,9 +1125,16 @@ function renderVideo(src, x, y, width, height, fileObject = null, existingPath =
             const result = await response.json();
             
              if (response.ok) {
-                hasUnsavedChanges = false; 
-                Swal.fire('Berhasil!', 'Desain kartu tersimpan permanen.', 'success');
-            } else {
+            hasUnsavedChanges = false; 
+            
+            // 1. Tampilkan Toast Bootstrap (Sukses)
+            const toastEl = document.getElementById('successToast');
+            const toast = new bootstrap.Toast(toastEl);
+            toast.show();
+
+            // 2. Langsung otomatis buka Modal QR & Share
+            openShareModal();
+        } else {
                 let errors = '';
                 for(let key in result.errors) errors += result.errors[key][0] + '\n';
                 Swal.fire('Error', errors || 'Terjadi kesalahan sistem.', 'error');
@@ -936,6 +1160,7 @@ function renderVideo(src, x, y, width, height, fileObject = null, existingPath =
     }
 
     // ----- FITUR SHARE & QR CODE -----
+// --- FITUR SHARE & QR CODE ---
 let qrCodeObj = null;
 
 function openShareModal() {
@@ -946,17 +1171,16 @@ function openShareModal() {
         return Swal.fire('Oops!', 'Silakan "Simpan" desain kamu terlebih dahulu sebelum membagikan!', 'warning');
     }
 
-    // --- PERBAIKAN DI SINI ---
-    // Pastikan nama variabelnya KONSISTEN (pakai fullUrl semua)
     const fullUrl = window.location.origin + '/' + slug; 
-    document.getElementById('share-link-result').value = fullUrl; // Tadi lu tulis finalUrl
+
+    // BARIS YANG BIKIN ERROR (document.getElementById('share-link-result').value = fullUrl) SUDAH DIHAPUS DI SINI
 
     // Bersihkan QR Code lama (jika ada)
     document.getElementById('qrcode-container').innerHTML = '';
     
     // Generate QR Code Baru
     qrCodeObj = new QRCode(document.getElementById("qrcode-container"), {
-        text: fullUrl, // Tadi lu tulis finalUrl
+        text: fullUrl,
         width: 180,
         height: 180,
         colorDark : "#581c87", 
@@ -1042,6 +1266,15 @@ document.addEventListener("DOMContentLoaded", function() {
     const deskripsiCounter = document.getElementById('deskripsi-counter');
     const previewUpload = document.getElementById('preview-upload');
     const previewDisplay = document.getElementById('preview-image-display');
+    // Render Shape ke Modal
+    const sContainer = document.getElementById('element-list');
+    for(let key in shapeDictionary) {
+        let btn = document.createElement('div');
+        btn.className = 'shape-item';
+        btn.innerHTML = `<svg viewBox="0 0 100 100" preserveAspectRatio="none">${shapeDictionary[key]}</svg>`;
+        btn.onclick = () => { addShape(key); bootstrap.Modal.getInstance(document.getElementById('elementModal')).hide(); };
+        sContainer.appendChild(btn);
+    }
 
     // Fungsi update counter realtime
     const updateCounter = (input, counter, max) => {
@@ -1071,6 +1304,175 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 });
+
+let iconCounter = 0;
+
+function addIcon(iconName, x = 50, y = 50, color = "#7e22ce", size = 60, rotation = 0) {
+    iconCounter++;
+    const div = document.createElement('div');
+    div.className = 'design-element icon-box';
+    div.id = 'icon-' + iconCounter;
+    div.setAttribute('data-icon-name', iconName);
+    div.setAttribute('data-rotation', rotation);
+    div.setAttribute('data-x', x);
+    div.setAttribute('data-y', y);
+    
+    div.style.transform = `translate(${x}px, ${y}px)`;
+    div.style.width = `${size}px`;
+    div.style.height = `${size}px`;
+    div.style.color = color;
+
+    // KUNCI: Set font-size dengan variable size agar skala icon sama dengan ukuran pembungkusnya
+    div.innerHTML = `
+        <div class="el-btn-delete" onclick="deleteElement(event, '${div.id}')"><i class="fa-solid fa-xmark"></i></div>
+        <div class="icon-content w-100 h-100 d-flex align-items-center justify-content-center" style="transform: rotate(${rotation}deg);">
+            <iconify-icon icon="${iconName}" style="font-size: ${size}px; width: 100%; height: 100%; transition: font-size 0.1s;"></iconify-icon>
+        </div>
+        <div class="el-handle-resize"></div>
+    `;
+
+    // Ambil data saat elemen di-klik
+    div.addEventListener('mousedown', function(e) { 
+        setActive(div); 
+        document.getElementById('icon-color').value = rgbToHex(div.style.color);
+        document.getElementById('icon-rotation').value = div.getAttribute('data-rotation');
+        document.getElementById('icon-size').value = parseFloat(div.style.width); // Update value slider
+    });
+
+    document.getElementById('card-canvas').appendChild(div);
+    setActive(div);
+    
+    // Set parameter toolbar saat dibuat
+    document.getElementById('icon-size').value = size;
+    document.getElementById('icon-rotation').value = rotation;
+    
+    markAsUnsaved();
+}
+
+function updateActiveIcon() {
+    if (activeElement && activeElement.classList.contains('icon-box')) {
+        const color = document.getElementById('icon-color').value;
+        const rotation = document.getElementById('icon-rotation').value;
+        const size = document.getElementById('icon-size').value;
+
+        // Ubah warna, rotasi, lebar pembungkus, dan yang terpenting: Ukuran Font Iconify
+        activeElement.style.color = color;
+        activeElement.setAttribute('data-rotation', rotation);
+        activeElement.style.width = `${size}px`;
+        activeElement.style.height = `${size}px`;
+        activeElement.querySelector('.icon-content').style.transform = `rotate(${rotation}deg)`;
+        
+        // Atur font-size dari iconify itu sendiri
+        activeElement.querySelector('iconify-icon').style.fontSize = `${size}px`;
+        
+        markAsUnsaved();
+    }
+}
+
+function addShape(type, x = 100, y = 100, color = "#7e22ce", size = 100, rotation = 0) {
+    if(!shapeDictionary[type]) return;
+    shapeCounter++;
+    const div = document.createElement('div');
+    div.className = 'design-element shape-box';
+    div.id = 'shape-' + shapeCounter;
+    div.setAttribute('data-shape-type', type);
+    div.setAttribute('data-rotation', rotation);
+    div.setAttribute('data-x', x);
+    div.setAttribute('data-y', y);
+    
+    div.style.transform = `translate(${x}px, ${y}px)`;
+    div.style.width = `${size}px`;
+    div.style.height = `${size}px`;
+    div.style.color = color;
+
+    div.innerHTML = `
+        <div class="el-btn-delete" onclick="deleteElement(event, '${div.id}')"><i class="fa-solid fa-xmark"></i></div>
+        <div class="shape-content" style="transform: rotate(${rotation}deg);">
+            <svg viewBox="0 0 100 100" preserveAspectRatio="none" fill="currentColor">${shapeDictionary[type]}</svg>
+        </div>
+        <div class="el-handle-resize"></div>
+    `;
+
+    div.addEventListener('mousedown', function(e) { setActive(div); });
+    document.getElementById('card-canvas').appendChild(div);
+    setActive(div);
+    document.getElementById('element-size').value = size;
+    document.getElementById('element-rotation').value = rotation;
+    document.getElementById('element-color').value = color;
+    markAsUnsaved();
+}
+
+function updateActiveShape() {
+    if (activeElement && activeElement.classList.contains('shape-box')) {
+        const color = document.getElementById('element-color').value;
+        const rotation = document.getElementById('element-rotation').value;
+        const size = document.getElementById('element-size').value;
+
+        activeElement.style.color = color;
+        activeElement.setAttribute('data-rotation', rotation);
+        activeElement.style.width = `${size}px`;
+        activeElement.style.height = `${size}px`;
+        activeElement.querySelector('.shape-content').style.transform = `rotate(${rotation}deg)`;
+        markAsUnsaved();
+    }
+}
+
+// --- FUNGSI SHARE NATIVE API (DARI DALAM MODAL) ---
+function shareCard() {
+    const slug = document.getElementById('slug-input').value;
+    const fullUrl = window.location.origin + '/' + slug;
+    const title = document.getElementById('judul-input').value || 'Kartu Digital OFOR.SITE';
+
+    if (navigator.share) {
+        // Jika browser/HP support Share API
+        navigator.share({
+            title: title,
+            text: 'Halo! Lihat kartu digital interaktif yang saya buat di OFOR.SITE.',
+            url: fullUrl
+        }).catch((error) => console.log('Share error/batal:', error));
+    } else {
+        // Fallback: Jika dibuka di PC/Browser lama, otomatis Copy Link
+        navigator.clipboard.writeText(fullUrl);
+        Swal.fire({
+            toast: true, position: 'top-end', icon: 'success', 
+            title: 'Tautan disalin ke clipboard!', showConfirmButton: false, timer: 1500
+        });
+    }
+}
+
+// --- FUNGSI DOWNLOAD KARTU SEBAGAI PNG (DARI DALAM MODAL) ---
+function downloadCard(btn) {
+    const canvasElement = document.getElementById('card-canvas');
+    const originalText = btn.innerHTML;
+
+    // Bersihkan state active agar garis kotak editing tidak ikut ter-download
+    document.querySelectorAll('.design-element').forEach(node => node.classList.remove('active-element'));
+    activeElement = null;
+
+    // Ubah tombol jadi status loading biar user tau sistem lagi memproses
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Proses...';
+    btn.disabled = true;
+
+    // Render HTML Canvas ke Gambar
+    html2canvas(canvasElement, {
+        useCORS: true, 
+        scale: 2, // Resolusi tinggi (jernih)
+        backgroundColor: canvasElement.style.backgroundColor !== 'rgba(0, 0, 0, 0)' ? canvasElement.style.backgroundColor : '#ffffff'
+    }).then(canvas => {
+        const link = document.createElement('a');
+        const slug = document.getElementById('slug-input').value || 'kartu';
+        link.download = `OFOR-${slug}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+    }).catch(err => {
+        Swal.fire('Error', 'Gagal merender gambar kartu.', 'error');
+        console.error(err);
+    }).finally(() => {
+        // Kembalikan tombol seperti semula
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    });
+}
 </script>
 </body>
 </html>
