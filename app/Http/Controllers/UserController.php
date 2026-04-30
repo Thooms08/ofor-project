@@ -37,7 +37,7 @@ class UserController extends Controller
         }
 
         $invoiceNumber = 'OFOR-' . time() . '-' . strtoupper(Str::random(4));
-        $amount = 500;
+        $amount = 15000;
 
         // Simpan data transaksi ke database dengan status pending
         $paymentRecord = UserPayment::create([
