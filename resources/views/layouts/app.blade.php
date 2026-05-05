@@ -229,7 +229,7 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top py-3">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="{{ url('/') }}">
-                <img src="{{ asset('logo-no-bg.png') }}" alt="Logo OFOR.SITE" height="50" class="me-2"> OFOR.SITE
+                <img src="{{ asset('/logo-no-bg.png') }}" alt="Logo OFOR.SITE" height="50" class="me-2"> OFOR.SITE
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="burger-icon"></span>
@@ -280,7 +280,7 @@
             <div class="row align-items-center">
                 <div class="col-lg-4 col-md-12 mb-3 mb-lg-0 text-center text-lg-start">
                    <h5 class="fw-bold mb-1">
-                        <img src="{{ asset('logo-no-bg.png') }}" alt="Logo OFOR.SITE" height="50" class="me-2"> OFOR.SITE
+                        <img src="{{ asset('/logo-no-bg.png') }}" alt="Logo OFOR.SITE" height="50" class="me-2"> OFOR.SITE
                     </h5>
                     <p class="mb-0 text-white-50 small">Platform pembuat kartu digital interaktif terbaik.</p>
                 </div>
