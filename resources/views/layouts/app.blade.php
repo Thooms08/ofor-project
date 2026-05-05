@@ -244,9 +244,6 @@
                         <a class="nav-link" href="{{ url('/') }}#fitur">Fitur</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/') }}#harga">Harga</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('tentang') ? 'active' : '' }}" href="{{ route('tentang') }}">Tentang</a>
                     </li>
                     <li class="nav-item">
