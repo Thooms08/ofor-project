@@ -344,7 +344,7 @@
         var heroCarouselEl = document.getElementById('heroCarousel');
         if (heroCarouselEl) {
             var heroCarousel = new bootstrap.Carousel(heroCarouselEl, {
-                interval: 27000,   // 27 detik
+                interval: 25000,   // 27 detik
                 ride: 'carousel',  // langsung jalan otomatis
                 wrap: true,        // loop terus
                 pause: 'hover'     // pause saat di-hover (opsional)
