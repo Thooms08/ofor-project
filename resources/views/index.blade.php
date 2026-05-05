@@ -98,7 +98,7 @@
     }
 </style>
 
-<header id="heroCarousel" class="carousel slide carousel-fade hero-carousel" data-bs-ride="carousel" data-bs-interval="27000">
+<header id="heroCarousel" class="carousel slide carousel-fade hero-carousel">
     <!-- PERBAIKAN 1: Tambah indikator ke-3 -->
     <div class="carousel-indicators">
         <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -338,5 +338,19 @@
         </div>
     </div>
 </section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var heroCarouselEl = document.getElementById('heroCarousel');
+        if (heroCarouselEl) {
+            var heroCarousel = new bootstrap.Carousel(heroCarouselEl, {
+                interval: 27000,   // 27 detik
+                ride: 'carousel',  // langsung jalan otomatis
+                wrap: true,        // loop terus
+                pause: 'hover'     // pause saat di-hover (opsional)
+            });
+        }
+    });
+</script>
 
 @endsection
