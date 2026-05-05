@@ -398,7 +398,7 @@
             </button>
         </div>
         <div class="toolbar-group">
-            <button class="btn btn-sm btn-custom fw-bold text-nowrap text-nowrap" data-bs-toggle="modal" data-bs-target="#elementModal"><i class="fa-solid fa-shapes"></i> Element</button>
+            <button class="btn btn-sm btn-custom fw-bold text-nowrap" data-bs-toggle="modal" data-bs-target="#elementModal"><i class="fa-solid fa-shapes"></i> Element</button>
             <input type="color" id="element-color" class="form-control form-control-color form-control-sm border-0 p-0 m-0 shadow-sm" value="#7e22ce" onchange="updateActiveShape()" title="Warna Element">
             <div class="d-flex align-items-center gap-1 mx-1" style="width: 50px;">
                 <i class="fa-solid fa-expand text-white-50" style="font-size: 11px;"></i>
