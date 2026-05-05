@@ -28,7 +28,14 @@
             --purple-light: #f3e8ff;
             --bg-light: #f8f9fa; 
         }
-        body { background: var(--bg-light); font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        body { 
+            background: var(--bg-light); 
+            font-family: 'Inter', sans-serif; 
+            /* KUNCI: Kunci mutlak lebar body agar tidak meluber */
+            overflow-x: hidden; 
+            width: 100%; 
+            max-width: 100vw; 
+        }
         
         /* Toolbar Styling Refactored for Mobile */
         .toolbar { 
@@ -63,16 +70,18 @@
 
         .canvas-container { 
             display: flex; 
-            justify-content: flex-start; 
+            justify-content: center; 
             align-items: flex-start; 
-            padding: 30px 15px; 
+            padding: 30px 0; 
             min-height: calc(100vh - 120px); 
-            overflow: auto; 
+            overflow-x: hidden; 
+            overflow-y: auto; 
             -webkit-overflow-scrolling: touch;
+            width: 100%;
         }
 
         #card-canvas {
-            margin: 0 auto; 
+            margin: 0; 
             background-color: white; 
             background-size: cover; 
             background-position: center;
@@ -84,7 +93,6 @@
             transform-origin: top center; 
             transition: transform 0.3s ease; 
         }
-
 
         .el-btn-delete {
             position: absolute; top: -15px; right: -15px; background: #ef4444; color: white;

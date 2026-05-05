@@ -271,7 +271,7 @@
         </div>
     </nav>
 
-    <main class="flex-grow-1">
+    <main class="flex-grow1">
         @yield('content')
     </main>
 
