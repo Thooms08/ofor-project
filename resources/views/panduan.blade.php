@@ -123,22 +123,22 @@
         .guide-hero { border-radius: 0 0 30px 30px; padding: 60px 0; }
         .step-item { padding-left: 35px; }
     }
+
+    .bg-dots {
+        background-image: radial-gradient(rgba(255, 255, 255, 0.2) 2px, transparent 2px);
+        background-size: 30px 30px;
+    }
 </style>
 
-<header class="guide-hero">
-    <div class="container px-4">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb justify-content-center">
-                <li class="breadcrumb-item"><a href="{{ url('/') }}" class="text-white opacity-75 text-decoration-none">Home</a></li>
-                <li class="breadcrumb-item active text-white fw-bold" aria-current="page">Panduan</li>
-            </ol>
-        </nav>
-        <h1 class="animate__animated animate__fadeInDown">Panduan Penggunaan Ofor.site</h1>
-        <p class="lead opacity-75 mx-auto" style="max-width: 700px;">
-            Ofor.site adalah platform digital untuk membuat kartu digital kreatif dengan mudah, cepat, dan fleksibel.
-        </p>
-    </div>
-</header>
+<main>
+
+    <header class="bg-purple py-5 mb-5 position-relative overflow-hidden">
+        <div class="position-absolute top-0 start-0 w-100 h-100 bg-dots"></div>
+        <div class="container py-5 text-center position-relative" style="z-index: 2;">
+            <h1 class="display-4 fw-bold mb-3">Panduan Penggunaan Ofor.site</h1>
+            <p class="lead fw-normal mb-0 opacity-75"> Ofor.site adalah platform digital untuk membuat kartu digital kreatif dengan mudah, cepat, dan fleksibel.</p>
+        </div>
+    </header>
 
 <section class="py-5">
     <div class="container py-lg-4">
@@ -178,7 +178,7 @@
             <div class="col-md-10">
                 <div class="alert bg-white border border-warning rounded-4 p-4 shadow-sm mb-0">
                     <div class="d-flex align-items-center">
-                        <div class="flex-shrink-0 me-3 text-warning fs-1">
+                        <div class="flex-shrink0 me-3 text-warning fs-1">
                             <i class="bi bi-info-circle-fill"></i>
                         </div>
                         <div>
@@ -298,7 +298,7 @@
         
         <div class="row justify-content-center">
             <div class="col-lg-8">
-                <div class="ratio ratio-16x9 shadow-lg rounded-4 overflow-hidden border border-4 border-white">
+                <div class="ratio ratio-16x9 shadow-lg rounded-4 overflow-hidden border-4 border-white">
                     <iframe src="https://www.youtube.com/embed/wXtedKctcSM?si=LV2Pqz25SddQ4u9O" title="YouTube video tutorial Ofor.site" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                 </div>
             </div>
@@ -315,6 +315,8 @@
         </div>
     </div>
 </section>
+
+</main>
 
 @endsection
 

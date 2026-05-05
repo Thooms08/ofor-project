@@ -47,10 +47,15 @@
         font-size: 1.5rem;
         flex-shrink: 0;
     }
+    .bg-dots {
+        background-image: radial-gradient(rgba(255, 255, 255, 0.2) 2px, transparent 2px);
+        background-size: 30px 30px;
+    }
 </style>
 
 <main>
     <header class="bg-purple py-5 mb-5 position-relative overflow-hidden">
+        <div class="position-absolute top-0 start-0 w-100 h-100 bg-dots"></div>
         <div class="container py-4 text-center position-relative" style="z-index: 2;">
             <h1 class="display-5 fw-bold mb-3">Syarat & Ketentuan</h1>
             <p class="lead fw-normal mb-0 opacity-75">Panduan Penggunaan Layanan Ofor.site</p>

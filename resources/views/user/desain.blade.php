@@ -241,33 +241,34 @@
 <body>
 
 <div class="toolbar sticky-top">
-    <div class="d-flex justify-content-between align-items-center mb-2 gap-2">
-        <div class="d-flex align-items-center gap-2">
-            <a href="{{ route('user.dashboard') }}" class="btn btn-custom btn-sm rounded-circle d-flex align-items-center justify-content-center" title="Kembali ke Dashboard" style="width: 32px; height: 32px;">
-                <i class="fa-solid fa-arrow-left"></i>
-            </a>
-
-            <div class="fw-bold text-white d-flex align-items-center gap-1" style="font-size: 1.05rem; white-space: nowrap;">
-                <i class="fa-solid fa-wand-magic-sparkles text-warning"></i> 
-                <span>OFOR <span class="fw-light">EDITOR</span></span>
-            </div>
-        </div>
-
-        <div class="d-flex gap-2">
-            
-            <button class="btn btn-warning btn-sm fw-bold text-dark px-2 px-sm-3 shadow-sm text-nowrap" onclick="shareCard()">
-                <i class="fa-solid fa-share-nodes"></i> <span class="d-none d-sm-inline">Bagikan</span>
-            </button>
-
-            <button class="btn btn-light btn-sm fw-bold text-purple-dark px-2 px-sm-3 shadow-sm text-nowrap" data-bs-toggle="modal" data-bs-target="#metaModal">
-                <i class="fa-solid fa-gear"></i> <span class="d-none d-sm-inline">Pengaturan</span>
-            </button>
-            
-            <button class="btn btn-light btn-sm fw-bold text-purple-dark px-2 px-sm-3 shadow-sm text-nowrap" onclick="saveDesign()" id="btn-save">
-               <i class="fa-solid fa-floppy-disk"></i><span> Simpan</span>
-            </button>
+    <div class="d-flex justify-content-between align-items-center mb-2 gap-1 gap-sm-2">
+    <div class="d-flex align-items-center gap-1 gap-sm-2 overflow-hidden">
+        <a href="{{ route('user.dashboard') }}" class="btn btn-custom btn-sm rounded-circle d-flex align-items-center justify-content-center flex-shrink0" title="Kembali ke Dashboard" style="width: 32px; height: 32px;">
+            <i class="fa-solid fa-arrow-left"></i>
+        </a>
+        <div class="fw-bold text-white d-flex align-items-center gap-1 text-truncate" style="font-size: clamp(0.85rem, 3.5vw, 1.05rem);">
+            <i class="fa-solid fa-wand-magic-sparkles text-warning flex-shrink0"></i> 
+            <span class="text-truncate">OFOR <span class="fw-light">EDITOR</span></span>
         </div>
     </div>
+
+    <!-- KUNCI 2: Ubah gap-2 jadi gap-1 khusus di mobile, dan tambah flex-shrink-0 -->
+    <div class="d-flex gap-1 gap-sm-2 flex-shrink0">
+        
+        <button class="btn btn-warning btn-sm fw-bold text-dark px-2 px-sm-3 shadow-sm text-nowrap" onclick="shareCard()">
+            <i class="fa-solid fa-share-nodes"></i> <span class="d-none d-sm-inline">Bagikan</span>
+        </button>
+
+        <button class="btn btn-light btn-sm fw-bold text-purple-dark px-2 px-sm-3 shadow-sm text-nowrap" data-bs-toggle="modal" data-bs-target="#metaModal">
+            <i class="fa-solid fa-gear"></i> <span class="d-none d-sm-inline">Pengaturan</span>
+        </button>
+        
+        <!-- Teks 'Simpan' tetap dipertahankan, ditambah ms-1 agar ada jarak sedikit dengan icon -->
+        <button class="btn btn-light btn-sm fw-bold text-purple-dark px-2 px-sm-3 shadow-sm text-nowrap" onclick="saveDesign()" id="btn-save">
+           <i class="fa-solid fa-floppy-disk"></i><span class="ms-1">Simpan</span>
+        </button>
+    </div>
+</div>
 
     <div class="position-relative mb-2 w-100" style="max-width: 400px; margin: 0 auto;">
     <div class="input-group input-group-sm shadow-sm">
@@ -299,62 +300,76 @@
         </div>
 
         <div class="toolbar-group">
-            <select id="font-family" class="form-select form-select-sm w-auto bg-transparent text-white border-light shadow-none" style="min-width: 90px;" onchange="updateActiveText()">
-                <optgroup label="Standar">
-                    <option value="'Inter', sans-serif" class="text-dark" style="font-family:'Inter', sans-serif;">Default (Inter)</option>
-                    <option value="'Poppins', sans-serif" class="text-dark" style="font-family:'Poppins', sans-serif;">Modern (Poppins)</option>
-                    <option value="'Comic Neue', cursive" class="text-dark" style="font-family:'Comic Neue', cursive;">Lucu (Comic)</option>
-                    <option value="'Caveat', cursive" class="text-dark" style="font-family: 'Caveat', cursive;">Menarik (Caveat)</option>
-                </optgroup>
+           <!-- KUNCI: Kita pakai input hidden agar tidak merusak logika JS kamu yang lama -->
+           <input type="hidden" id="font-family" value="'Inter', sans-serif">
 
-                <optgroup label="Sans Serif (Bersih & Modern)">
-                    <option value="'Roboto', sans-serif" class="text-dark" style="font-family: 'Roboto', sans-serif;">Roboto</option>
-                    <option value="'Open Sans', sans-serif" class="text-dark" style="font-family: 'Open Sans', sans-serif;">Open Sans</option>
-                    <option value="'Lato', sans-serif" class="text-dark" style="font-family: 'Lato', sans-serif;">Lato</option>
-                    <option value="'Montserrat', sans-serif" class="text-dark" style="font-family: 'Montserrat', sans-serif;">Montserrat</option>
-                    <option value="'Oswald', sans-serif" class="text-dark" style="font-family: 'Oswald', sans-serif;">Oswald</option>
-                    <option value="'Raleway', sans-serif" class="text-dark" style="font-family: 'Raleway', sans-serif;">Raleway</option>
-                    <option value="'Nunito', sans-serif" class="text-dark" style="font-family: 'Nunito', sans-serif;">Nunito</option>
-                    <option value="'Quicksand', sans-serif" class="text-dark" style="font-family: 'Quicksand', sans-serif;">Quicksand</option>
-                    <option value="'Ubuntu', sans-serif" class="text-dark" style="font-family: 'Ubuntu', sans-serif;">Ubuntu</option>
-                    <option value="'Rubik', sans-serif" class="text-dark" style="font-family: 'Rubik', sans-serif;">Rubik</option>
-                </optgroup>
+<div class="dropdown d-inline-block">
+    <!-- TAMBAHKAN data-bs-popper-config DI SINI AGAR MENU MENEMBUS BATAS TOOLBAR -->
+    <button class="btn btn-sm form-select form-select-sm bg-transparent text-white border-light shadow-none d-flex align-items-center justify-content-between text-start pe-4 position-relative" 
+            type="button" 
+            id="fontDropdownToggle" 
+            data-bs-toggle="dropdown" 
+            aria-expanded="false" 
+            data-bs-popper-config='{"strategy":"fixed"}'
+            style="min-width: 120px; max-width: 140px;">
+        <span id="font-selected-text" class="text-truncate" style="font-family: 'Inter', sans-serif;">Default (Inter)</span>
+    </button>
+    
+    <ul class="dropdown-menu shadow" style="max-height: 300px; overflow-y: auto; z-index: 1050;">
+        <li><h6 class="dropdown-header fw-bold text-purple-dark">Standar</h6></li>
+        <li><a class="dropdown-item font-picker" href="#" data-value="'Inter', sans-serif" style="font-family: 'Inter', sans-serif;">Default (Inter)</a></li>
+        <li><a class="dropdown-item font-picker" href="#" data-value="'Poppins', sans-serif" style="font-family: 'Poppins', sans-serif;">Modern (Poppins)</a></li>
+        <li><a class="dropdown-item font-picker" href="#" data-value="'Comic Neue', cursive" style="font-family: 'Comic Neue', cursive;">Lucu (Comic)</a></li>
+        <li><a class="dropdown-item font-picker" href="#" data-value="'Caveat', cursive" style="font-family: 'Caveat', cursive;">Menarik (Caveat)</a></li>
 
-                <optgroup label="Serif (Klasik & Elegan)">
-                    <option value="'Playfair Display', serif" class="text-dark" style="font-family: 'Playfair Display', serif;">Playfair Display</option>
-                    <option value="'Merriweather', serif" class="text-dark" style="font-family: 'Merriweather', serif;">Merriweather</option>
-                    <option value="'Lora', serif" class="text-dark" style="font-family: 'Lora', serif;">Lora</option>
-                    <option value="'PT Serif', serif" class="text-dark" style="font-family: 'PT Serif', serif;">PT Serif</option>
-                    <option value="'Noto Serif', serif" class="text-dark" style="font-family: 'Noto Serif', serif;">Noto Serif</option>
-                    <option value="'EB Garamond', serif" class="text-dark" style="font-family: 'EB Garamond', serif;">EB Garamond</option>
-                    <option value="'Bitter', serif" class="text-dark" style="font-family: 'Bitter', serif;">Bitter</option>
-                    <option value="'Crimson Text', serif" class="text-dark" style="font-family: 'Crimson Text', serif;">Crimson Text</option>
-                    <option value="'Josefin Slab', serif" class="text-dark" style="font-family: 'Josefin Slab', serif;">Josefin Slab</option>
-                </optgroup>
+        <li><hr class="dropdown-divider"></li>
+        <li><h6 class="dropdown-header fw-bold text-purple-dark">Sans Serif</h6></li>
+        <li><a class="dropdown-item font-picker" href="#" data-value="'Roboto', sans-serif" style="font-family: 'Roboto', sans-serif;">Roboto</a></li>
+        <li><a class="dropdown-item font-picker" href="#" data-value="'Open Sans', sans-serif" style="font-family: 'Open Sans', sans-serif;">Open Sans</a></li>
+        <li><a class="dropdown-item font-picker" href="#" data-value="'Lato', sans-serif" style="font-family: 'Lato', sans-serif;">Lato</a></li>
+        <li><a class="dropdown-item font-picker" href="#" data-value="'Montserrat', sans-serif" style="font-family: 'Montserrat', sans-serif;">Montserrat</a></li>
+        <li><a class="dropdown-item font-picker" href="#" data-value="'Oswald', sans-serif" style="font-family: 'Oswald', sans-serif;">Oswald</a></li>
+        <li><a class="dropdown-item font-picker" href="#" data-value="'Raleway', sans-serif" style="font-family: 'Raleway', sans-serif;">Raleway</a></li>
+        <li><a class="dropdown-item font-picker" href="#" data-value="'Nunito', sans-serif" style="font-family: 'Nunito', sans-serif;">Nunito</a></li>
+        <li><a class="dropdown-item font-picker" href="#" data-value="'Quicksand', sans-serif" style="font-family: 'Quicksand', sans-serif;">Quicksand</a></li>
+        <li><a class="dropdown-item font-picker" href="#" data-value="'Ubuntu', sans-serif" style="font-family: 'Ubuntu', sans-serif;">Ubuntu</a></li>
+        <li><a class="dropdown-item font-picker" href="#" data-value="'Rubik', sans-serif" style="font-family: 'Rubik', sans-serif;">Rubik</a></li>
 
-                <optgroup label="Handwriting (Tulisan Tangan)">
-                    <option value="'Pacifico', cursive" class="text-dark" style="font-family: 'Pacifico', cursive;">Pacifico</option>
-                    <option value="'Dancing Script', cursive" class="text-dark" style="font-family: 'Dancing Script', cursive;">Dancing Script</option>
-                    <option value="'Satisfy', cursive" class="text-dark" style="font-family: 'Satisfy', cursive;">Satisfy</option>
-                    <option value="'Great Vibes', cursive" class="text-dark" style="font-family: 'Great Vibes', cursive;">Great Vibes</option>
-                    <option value="'Amatic SC', cursive" class="text-dark" style="font-family: 'Amatic SC', cursive;">Amatic SC</option>
-                    <option value="'Patrick Hand', cursive" class="text-dark" style="font-family: 'Patrick Hand', cursive;">Patrick Hand</option>
-                    <option value="'Courgette', cursive" class="text-dark" style="font-family: 'Courgette', cursive;">Courgette</option>
-                    <option value="'Kaushan Script', cursive" class="text-dark" style="font-family: 'Kaushan Script', cursive;">Kaushan Script</option>
-                    <option value="'Cookie', cursive" class="text-dark" style="font-family: 'Cookie', cursive;">Cookie</option>
-                    <option value="'Sacramento', cursive" class="text-dark" style="font-family: 'Sacramento', cursive;">Sacramento</option>
-                </optgroup>
+        <li><hr class="dropdown-divider"></li>
+        <li><h6 class="dropdown-header fw-bold text-purple-dark">Serif</h6></li>
+        <li><a class="dropdown-item font-picker" href="#" data-value="'Playfair Display', serif" style="font-family: 'Playfair Display', serif;">Playfair Display</a></li>
+        <li><a class="dropdown-item font-picker" href="#" data-value="'Merriweather', serif" style="font-family: 'Merriweather', serif;">Merriweather</a></li>
+        <li><a class="dropdown-item font-picker" href="#" data-value="'Lora', serif" style="font-family: 'Lora', serif;">Lora</a></li>
+        <li><a class="dropdown-item font-picker" href="#" data-value="'PT Serif', serif" style="font-family: 'PT Serif', serif;">PT Serif</a></li>
+        <li><a class="dropdown-item font-picker" href="#" data-value="'Noto Serif', serif" style="font-family: 'Noto Serif', serif;">Noto Serif</a></li>
+        <li><a class="dropdown-item font-picker" href="#" data-value="'EB Garamond', serif" style="font-family: 'EB Garamond', serif;">EB Garamond</a></li>
+        <li><a class="dropdown-item font-picker" href="#" data-value="'Bitter', serif" style="font-family: 'Bitter', serif;">Bitter</a></li>
+        <li><a class="dropdown-item font-picker" href="#" data-value="'Crimson Text', serif" style="font-family: 'Crimson Text', serif;">Crimson Text</a></li>
+        <li><a class="dropdown-item font-picker" href="#" data-value="'Josefin Slab', serif" style="font-family: 'Josefin Slab', serif;">Josefin Slab</a></li>
 
-                <optgroup label="Display (Unik & Dekoratif)">
-                    <option value="'Bebas Neue', sans-serif" class="text-dark" style="font-family: 'Bebas Neue', sans-serif;">Bebas Neue</option>
-                    <option value="'Lobster', cursive" class="text-dark" style="font-family: 'Lobster', cursive;">Lobster</option>
-                    <option value="'Righteous', cursive" class="text-dark" style="font-family: 'Righteous', cursive;">Righteous</option>
-                    <option value="'Fredoka', sans-serif" class="text-dark" style="font-family: 'Fredoka', sans-serif;">Fredoka</option>
-                    <option value="'Abril Fatface', display" class="text-dark" style="font-family: 'Abril Fatface', display;">Abril Fatface</option>
-                    <option value="'Cinzel', serif" class="text-dark" style="font-family: 'Cinzel', serif;">Cinzel</option>
-                </optgroup>
-            </select>
-            
+        <li><hr class="dropdown-divider"></li>
+        <li><h6 class="dropdown-header fw-bold text-purple-dark">Handwriting</h6></li>
+        <li><a class="dropdown-item font-picker" href="#" data-value="'Pacifico', cursive" style="font-family: 'Pacifico', cursive;">Pacifico</a></li>
+        <li><a class="dropdown-item font-picker" href="#" data-value="'Dancing Script', cursive" style="font-family: 'Dancing Script', cursive;">Dancing Script</a></li>
+        <li><a class="dropdown-item font-picker" href="#" data-value="'Satisfy', cursive" style="font-family: 'Satisfy', cursive;">Satisfy</a></li>
+        <li><a class="dropdown-item font-picker" href="#" data-value="'Great Vibes', cursive" style="font-family: 'Great Vibes', cursive;">Great Vibes</a></li>
+        <li><a class="dropdown-item font-picker" href="#" data-value="'Amatic SC', cursive" style="font-family: 'Amatic SC', cursive;">Amatic SC</a></li>
+        <li><a class="dropdown-item font-picker" href="#" data-value="'Patrick Hand', cursive" style="font-family: 'Patrick Hand', cursive;">Patrick Hand</a></li>
+        <li><a class="dropdown-item font-picker" href="#" data-value="'Courgette', cursive" style="font-family: 'Courgette', cursive;">Courgette</a></li>
+        <li><a class="dropdown-item font-picker" href="#" data-value="'Kaushan Script', cursive" style="font-family: 'Kaushan Script', cursive;">Kaushan Script</a></li>
+        <li><a class="dropdown-item font-picker" href="#" data-value="'Cookie', cursive" style="font-family: 'Cookie', cursive;">Cookie</a></li>
+        <li><a class="dropdown-item font-picker" href="#" data-value="'Sacramento', cursive" style="font-family: 'Sacramento', cursive;">Sacramento</a></li>
+
+        <li><hr class="dropdown-divider"></li>
+        <li><h6 class="dropdown-header fw-bold text-purple-dark">Display</h6></li>
+        <li><a class="dropdown-item font-picker" href="#" data-value="'Bebas Neue', sans-serif" style="font-family: 'Bebas Neue', sans-serif;">Bebas Neue</a></li>
+        <li><a class="dropdown-item font-picker" href="#" data-value="'Lobster', cursive" style="font-family: 'Lobster', cursive;">Lobster</a></li>
+        <li><a class="dropdown-item font-picker" href="#" data-value="'Righteous', cursive" style="font-family: 'Righteous', cursive;">Righteous</a></li>
+        <li><a class="dropdown-item font-picker" href="#" data-value="'Fredoka', sans-serif" style="font-family: 'Fredoka', sans-serif;">Fredoka</a></li>
+        <li><a class="dropdown-item font-picker" href="#" data-value="'Abril Fatface', display" style="font-family: 'Abril Fatface', display;">Abril Fatface</a></li>
+        <li><a class="dropdown-item font-picker" href="#" data-value="'Cinzel', serif" style="font-family: 'Cinzel', serif;">Cinzel</a></li>
+    </ul>
+</div>
             <input type="color" id="text-color" class="form-control form-control-color form-control-sm border-0 p-0 m-0 shadow-sm" value="#000000" onchange="updateActiveText()" title="Warna Teks">
             
             <div class="d-flex align-items-center gap-1 mx-1" style="width: 70px;">
@@ -731,7 +746,17 @@ document.addEventListener("DOMContentLoaded", function() {
 
         if (el.classList.contains('text-box')) {
             const textNode = el.querySelector('.text-content');
-            document.getElementById('font-family').value = textNode.style.fontFamily || "'Inter', sans-serif";
+            const activeFontFamily = textNode.style.fontFamily || "'Inter', sans-serif";
+            document.getElementById('font-family').value = activeFontFamily;
+            let activeFontName = "Default (Inter)";
+            document.querySelectorAll('.font-picker').forEach(item => {
+                if (item.getAttribute('data-value').replace(/['"]/g, '') === activeFontFamily.replace(/['"]/g, '')) {
+                    activeFontName = item.innerText;
+                }
+            });
+            const toggleSpan = document.getElementById('font-selected-text');
+            toggleSpan.innerText = activeFontName;
+            toggleSpan.style.fontFamily = activeFontFamily;
             document.getElementById('text-color').value = rgbToHex(textNode.style.color || window.getComputedStyle(textNode).color);
             document.getElementById('text-size').value = parseInt(window.getComputedStyle(textNode).fontSize) || 20;
             document.getElementById('text-rotation').value = el.getAttribute('data-rotation') || 0;
@@ -1800,6 +1825,30 @@ function downloadCard(btn) {
             range.addEventListener('touchmove', function(e) { e.stopPropagation(); }, {passive: true});
         });
     });
+
+    document.addEventListener("DOMContentLoaded", function() {
+    // Jalankan saat font di dropdown dipilih
+    document.querySelectorAll('.font-picker').forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault(); // Mencegah scroll ke atas
+            
+            const fontValue = this.getAttribute('data-value');
+            const fontName = this.innerText;
+            const fontStyle = this.style.fontFamily;
+
+            // 1. Ubah teks & gaya pada tombol dropdown
+            const toggleSpan = document.getElementById('font-selected-text');
+            toggleSpan.innerText = fontName;
+            toggleSpan.style.fontFamily = fontStyle;
+
+            // 2. Simpan nilai asli ke input hidden
+            document.getElementById('font-family').value = fontValue;
+
+            // 3. Panggil fungsing update punya kamu untuk mengganti font di kanvas
+            updateActiveText();
+        });
+    });
+});
 </script>
 </body>
 </html>
