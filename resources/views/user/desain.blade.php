@@ -63,7 +63,7 @@
 
         .canvas-container { 
             display: flex; 
-            justify-content: flex-start; /* FIX POTONG KIRI: Ubah dari center ke flex-start */
+            justify-content: flex-start; 
             align-items: flex-start; 
             padding: 30px 15px; 
             min-height: calc(100vh - 120px); 
@@ -72,19 +72,37 @@
         }
 
         #card-canvas {
-            margin: 0 auto; /* KUNCI: Biar otomatis ke tengah di PC, tapi nempel kiri di HP */
+            margin: 0 auto; 
             background-color: white; 
             background-size: cover; 
             background-position: center;
             position: relative; 
-            overflow: hidden;
+            overflow: hidden; 
             box-shadow: 0 15px 35px rgba(0,0,0,0.15); 
             border-radius: 12px;
             flex-shrink: 0; 
-            
-            /* Tambahan untuk efek Zoom Responsif */
             transform-origin: top center; 
             transition: transform 0.3s ease; 
+        }
+
+
+        .el-btn-delete {
+            position: absolute; top: -15px; right: -15px; background: #ef4444; color: white;
+            border-radius: 50%; width: 30px; height: 30px; font-size: 14px; display: none; /* Diperbesar untuk HP */
+            align-items: center; justify-content: center; cursor: pointer; z-index: 10;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .el-handle-resize {
+            position: absolute; bottom: -12px; right: -12px; background: var(--purple-primary);
+            width: 30px; height: 30px; border-radius: 50%; display: none; cursor: se-resize; z-index: 10; /* Diperbesar untuk HP */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2); border: 2px solid white;
+            align-items: center; justify-content: center;
+        }
+
+        /* Tambahan Icon Panah di tombol resize agar jelas arah tarikannya */
+        .el-handle-resize::after {
+            content: "⤡"; color: white; font-size: 14px; font-weight: bold; transform: rotate(90deg);
         }
         
         /* GANTI INI: Gunakan ukuran lebar dan tinggi mutlak, bukan max-width & aspect-ratio */
@@ -183,6 +201,33 @@
     from { opacity: 0; transform: translateY(-5px); }
     to { opacity: 1; transform: translateY(0); }
 }
+
+/* Mencegah toolbar ter-scroll saat menggeser slider di HP */
+        input[type="range"].form-range {
+            touch-action: none !important;
+        }
+
+        /* Tambahkan kode ini di dalam <style> */
+        .text-box .text-content {
+            white-space: pre-wrap !important; 
+            word-wrap: break-word !important;
+        }
+
+        .text-box.active-element::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: -6px; 
+            transform: translateY(-50%);
+            width: 8px; 
+            height: 30px; 
+            background-color: #ffffff;
+            border: 2px solid #6D28D9; 
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            cursor: ew-resize; 
+            z-index: 10;
+        }
     </style>
 </head>
 <body>
@@ -206,12 +251,12 @@
                 <i class="fa-solid fa-share-nodes"></i> <span class="d-none d-sm-inline">Bagikan</span>
             </button>
 
-            <button class="btn btn-light btn-sm fw-bold text-purple-dark px-2 px-sm-3 shadow-sm text-nowrap me-2" data-bs-toggle="modal" data-bs-target="#metaModal">
+            <button class="btn btn-light btn-sm fw-bold text-purple-dark px-2 px-sm-3 shadow-sm text-nowrap" data-bs-toggle="modal" data-bs-target="#metaModal">
                 <i class="fa-solid fa-gear"></i> <span class="d-none d-sm-inline">Pengaturan</span>
             </button>
             
             <button class="btn btn-light btn-sm fw-bold text-purple-dark px-2 px-sm-3 shadow-sm text-nowrap" onclick="saveDesign()" id="btn-save">
-               <i class="fa-solid fa-floppy-disk"></i><span class="d-none d-sm-inline"> Simpan</span>
+               <i class="fa-solid fa-floppy-disk"></i><span> Simpan</span>
             </button>
         </div>
     </div>
@@ -353,7 +398,7 @@
             </button>
         </div>
         <div class="toolbar-group">
-            <button class="btn btn-sm btn-warning fw-bold text-nowrap text-dark" data-bs-toggle="modal" data-bs-target="#elementModal"><i class="fa-solid fa-shapes"></i> Element</button>
+            <button class="btn btn-sm btn-custom fw-bold text-nowrap text-nowrap" data-bs-toggle="modal" data-bs-target="#elementModal"><i class="fa-solid fa-shapes"></i> Element</button>
             <input type="color" id="element-color" class="form-control form-control-color form-control-sm border-0 p-0 m-0 shadow-sm" value="#7e22ce" onchange="updateActiveShape()" title="Warna Element">
             <div class="d-flex align-items-center gap-1 mx-1" style="width: 50px;">
                 <i class="fa-solid fa-expand text-white-50" style="font-size: 11px;"></i>
@@ -626,7 +671,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const btnSave = document.getElementById('btn-save');
         if (!btnSave.innerHTML.includes('*')) {
             // Sesuaikan dengan UI baru yang ada d-none d-sm-inline
-            btnSave.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span class="d-none d-sm-inline">Simpan*</span>';
+            btnSave.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> <span>Simpan*</span>';
         }
     }
 
@@ -964,15 +1009,12 @@ document.addEventListener("DOMContentLoaded", function() {
     interact('.design-element')
     .draggable({
         inertia: true,
-        modifiers: [ interact.modifiers.restrictRect({ restriction: 'parent', endOnly: true }) ],
         autoScroll: true,
         listeners: {
             start(event) { setActive(event.target); },
             move(event) {
                 const target = event.target;
                 
-                // KUNCI RESPONSIVITAS KORDINAT: 
-                // Bagi gerakan jari (dx/dy) dengan currentScale agar elemen menempel sempurna di jari
                 const x = (parseFloat(target.getAttribute('data-x')) || 0) + (event.dx / currentScale);
                 const y = (parseFloat(target.getAttribute('data-y')) || 0) + (event.dy / currentScale);
                 
@@ -983,32 +1025,107 @@ document.addEventListener("DOMContentLoaded", function() {
             end(event) { markAsUnsaved(); }
         }
     })
-   .resizable({
-        edges: { left: false, right: '.el-handle-resize', bottom: '.el-handle-resize', top: false },
+    .resizable({
+        // KUNCI 1: Ubah right menjadi 'true' agar garis sisi kanan kotak bisa ditarik langsung
+        edges: { left: false, right: true, bottom: '.el-handle-resize', top: false },
         listeners: {
             move(event) {
                 const target = event.target;
-                
                 let currentWidth = parseFloat(target.style.width) || target.offsetWidth;
                 let currentHeight = parseFloat(target.style.height) || target.offsetHeight;
                 
                 let newWidth = currentWidth + (event.deltaRect.width / currentScale);
                 let newHeight = currentHeight + (event.deltaRect.height / currentScale);
 
-                if (target.classList.contains('icon-box') || target.classList.contains('shape-box')) {
-                    // PERBAIKAN: Gunakan newWidth, bukan nw
-                    target.style.width = `${newWidth}px`; 
-                    target.style.height = `${newWidth}px`;
+                // KUNCI 2: Deteksi bagian mana yang ditarik user
+                // Jika event.edges.bottom bernilai true, berarti user menarik tombol di pojok bawah.
+                // Jika false, berarti user cuma menarik sisi pinggir kanannya saja.
+                let isCornerDrag = event.edges.bottom; 
+
+                // LOGIKA TEKS
+                if (target.classList.contains('text-box')) {
+                    let textNode = target.querySelector('.text-content');
                     
-                    if(target.classList.contains('icon-box')) {
-                        target.querySelector('iconify-icon').style.fontSize = `${newWidth}px`;
-                        if (target.classList.contains('active-element')) document.getElementById('icon-size').value = newWidth;
-                    } else {
-                        if (target.classList.contains('active-element')) document.getElementById('element-size').value = newWidth;
+                    // JIKA DITARIK DARI POJOK BAWAH -> Besarkan ukuran Font secara proporsional
+                    if (isCornerDrag) {
+                        let currentFontSize = parseFloat(window.getComputedStyle(textNode).fontSize) || 20;
+                        let scaleRatio = newWidth / currentWidth;
+                        let newFontSize = currentFontSize * scaleRatio;
+                        if (newFontSize < 10) newFontSize = 10;
+
+                        textNode.style.fontSize = `${newFontSize}px`;
+                        if (target.classList.contains('active-element')) {
+                            document.getElementById('text-size').value = Math.round(newFontSize);
+                        }
+                    }
+                    
+                    // APAPUN YANG DITARIK (Pojok / Sisi) -> Lebar kotak akan ikut berubah!
+                    // Hasilnya: Jika user cuma menarik sisi kanan, font tidak berubah, tapi kotaknya menyempit & teks turun ke bawah.
+                    target.style.width = `${newWidth}px`;
+                    target.style.height = 'auto'; // Tinggi otomatis menyesuaikan isi teks
+                } 
+                // LOGIKA ICON & SHAPE
+                else if (target.classList.contains('icon-box') || target.classList.contains('shape-box')) {
+                    // Agar gambar/shape tidak penyok, kita hanya izinkan resize dari pojok saja
+                    if (isCornerDrag) { 
+                        target.style.width = `${newWidth}px`; 
+                        target.style.height = `${newWidth}px`;
+                        
+                        if(target.classList.contains('icon-box')) {
+                            target.querySelector('iconify-icon').style.fontSize = `${newWidth}px`;
+                            if (target.classList.contains('active-element')) document.getElementById('icon-size').value = Math.round(newWidth);
+                        } else {
+                            if (target.classList.contains('active-element')) document.getElementById('element-size').value = Math.round(newWidth);
+                        }
+                    }
+                } 
+                // LOGIKA GAMBAR / VIDEO
+                else {
+                    if (isCornerDrag) { // Hanya izinkan resize dari pojok
+                        target.style.width = `${newWidth}px`;
+                        target.style.height = `${newHeight}px`;
                     }
                 }
-                // JIKA OBJEK ADALAH TEKS/GAMBAR/VIDEO biasa:
-                else {
+            },
+            end(event) { markAsUnsaved(); }
+        }
+    })
+    // Fitur pinch-to-zoom di HP (2 jari)
+    .gesturable({
+        listeners: {
+            start(event) { setActive(event.target); },
+            move(event) {
+                const target = event.target;
+                let currentWidth = parseFloat(target.style.width) || target.offsetWidth;
+                let currentHeight = parseFloat(target.style.height) || target.offsetHeight;
+                
+                let newWidth = currentWidth * (1 + event.ds);
+                let newHeight = currentHeight * (1 + event.ds);
+
+                // LOGIKA BARU UNTUK MOBILE PINCH ZOOM TEKS
+                if (target.classList.contains('text-box')) {
+                    let textNode = target.querySelector('.text-content');
+                    let currentFontSize = parseFloat(window.getComputedStyle(textNode).fontSize) || 20;
+                    
+                    let newFontSize = currentFontSize * (1 + event.ds);
+                    if (newFontSize < 10) newFontSize = 10;
+
+                    textNode.style.fontSize = `${newFontSize}px`;
+                    target.style.width = `${newWidth}px`;
+                    target.style.height = 'auto';
+
+                    if (target.classList.contains('active-element')) {
+                        document.getElementById('text-size').value = Math.round(newFontSize);
+                    }
+                }
+                else if (target.classList.contains('icon-box') || target.classList.contains('shape-box')) {
+                    target.style.width = `${newWidth}px`; 
+                    target.style.height = `${newWidth}px`;
+                    if(target.classList.contains('icon-box')) {
+                        target.querySelector('iconify-icon').style.fontSize = `${newWidth}px`;
+                        if (target.classList.contains('active-element')) document.getElementById('icon-size').value = Math.round(newWidth);
+                    }
+                } else {
                     target.style.width = `${newWidth}px`;
                     target.style.height = `${newHeight}px`;
                 }
@@ -1016,7 +1133,6 @@ document.addEventListener("DOMContentLoaded", function() {
             end(event) { markAsUnsaved(); }
         }
     });
-
     // ----- LOAD DATA PERSISTENCE SAAT HALAMAN DIBUKA -----
     document.addEventListener("DOMContentLoaded", function() {
         autoZoomCanvas();
@@ -1064,17 +1180,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
             setTimeout(() => { 
                 hasUnsavedChanges = false; 
-                document.getElementById('btn-save').innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span class="d-none d-sm-inline">Simpan</span>';
+                document.getElementById('btn-save').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> <span>Simpan</span>';
             }, 500);
         }
     });
-
-    // ----- SIMPAN DATA -----
-    // ----- SIMPAN DATA -----
-    document.getElementById('slug-input').addEventListener('input', function() {
-    this.classList.remove('input-error-shake');
-    document.getElementById('slug-error-hint').classList.add('d-none');
-});
 document.getElementById('judul-input').addEventListener('input', function() {
     this.classList.remove('input-error-shake');
     document.getElementById('judul-error-hint').classList.add('d-none');
@@ -1325,9 +1434,9 @@ async function saveDesign() {
     Swal.fire('Error', error.message, 'error');
 } finally {
     if(hasUnsavedChanges) { 
-        document.getElementById('btn-save').innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span class="d-none d-sm-inline">Simpan*</span>';
+        document.getElementById('btn-save').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> <span>Simpan*</span>';
     } else {
-        document.getElementById('btn-save').innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span class="d-none d-sm-inline">Simpan</span>';
+        document.getElementById('btn-save').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> <span>Simpan</span>';
     }
     document.getElementById('btn-save').disabled = false;
 }
@@ -1401,20 +1510,42 @@ function downloadQR() {
 
 let slugTimeout = null;
 
-document.getElementById('slug-input').addEventListener('input', function() {
+// --- FUNGSI VALIDASI SLUG (TERPADU) ---
+document.getElementById('slug-input').addEventListener('input', function(e) {
     const slug = this.value;
     const feedback = document.getElementById('slug-feedback');
     const iconContainer = document.getElementById('slug-status-icon');
     const btnSave = document.getElementById('btn-save');
 
+    // 1. Hilangkan animasi error merah jika user mulai mengetik ulang
+    this.classList.remove('input-error-shake');
+    document.getElementById('slug-error-hint').classList.add('d-none');
+
+    // 2. CEK SPASI (Real-time)
+    if (slug.includes(' ')) {
+        feedback.style.display = 'block';
+        iconContainer.innerHTML = '<i class="bi bi-x-circle-fill text-danger"></i>';
+        feedback.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> URL tidak boleh memakai spasi!';
+        feedback.className = 'small fw-bold mt-1 px-2 text-danger';
+        btnSave.disabled = true; // Kunci tombol simpan
+        
+        // Fitur Auto-Fix: Otomatis ubah spasi jadi strip "-" (Hapus // di bawah ini jika mau diaktifkan)
+        // this.value = slug.replace(/\s+/g, '-'); 
+        
+        clearTimeout(slugTimeout); // Batalkan request AJAX ke server
+        return; 
+    }
+
+    // 3. Cek minimal karakter (misal: harus lebih dari 2 huruf)
     if (slug.length < 3) {
         feedback.style.display = 'none';
         iconContainer.innerHTML = '';
+        btnSave.disabled = false;
         return;
     }
 
+    // 4. JALANKAN AJAX UNTUK CEK KE DATABASE KALO FORMAT SUDAH BENAR
     clearTimeout(slugTimeout);
-
     slugTimeout = setTimeout(async () => {
         try {
             const response = await fetch(`{{ route('desain.checkSlug') }}?slug=${slug}`);
@@ -1423,17 +1554,15 @@ document.getElementById('slug-input').addEventListener('input', function() {
             feedback.style.display = 'block';
             
             if (data.available) {
-                // Pakai Icon Ceklis Bootstrap (Warna Hijau)
                 iconContainer.innerHTML = '<i class="bi bi-check-circle-fill text-success"></i>';
                 feedback.innerHTML = '<i class="bi bi-check-lg"></i> URL tersedia!';
-                feedback.className = 'small fw-bold mt-1 px-2 text-white'; // Teks putih agar terlihat di bg ungu
-                btnSave.disabled = false;
+                feedback.className = 'small fw-bold mt-1 px-2 text-white'; 
+                btnSave.disabled = false; // Buka kunci tombol simpan
             } else {
-                // Pakai Icon Silang/Peringatan Bootstrap (Warna Merah)
                 iconContainer.innerHTML = '<i class="bi bi-x-circle-fill text-danger"></i>';
                 feedback.innerHTML = '<i class="bi bi-exclamation-triangle-fill"></i> URL sudah dipakai orang lain!';
                 feedback.className = 'small fw-bold mt-1 px-2 text-warning';
-                btnSave.disabled = true;
+                btnSave.disabled = true; // Kunci tombol simpan
             }
         } catch (error) {
             console.error('Gagal mengecek slug');
@@ -1655,6 +1784,14 @@ function downloadCard(btn) {
         btn.disabled = false;
     });
 }
+// --- FIX SLIDER MOBILE: Cegah toolbar ikut bergeser saat slider disentuh ---
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll('input[type="range"]').forEach(range => {
+            // Hentikan perambatan event sentuh agar tidak sampai ke parent (toolbar)
+            range.addEventListener('touchstart', function(e) { e.stopPropagation(); }, {passive: true});
+            range.addEventListener('touchmove', function(e) { e.stopPropagation(); }, {passive: true});
+        });
+    });
 </script>
 </body>
 </html>

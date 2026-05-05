@@ -142,12 +142,30 @@
         font-size: 0.95rem;
         transition: all 0.3s ease;
         text-decoration: none;
+        /* Tambahkan Animasi Disini */
+        animation: pulse-cta 2s infinite;
     }
+
     .cta-buat-kartu:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(126, 34, 206, 0.3) !important;
+        box-shadow: 0 8px 20px rgba(126, 34, 206, 0.4) !important;
         color: #ffffff;
         opacity: 0.95;
+        /* Matikan animasi saat di-hover */
+        animation: none; 
+    }
+
+    /* Animasi Pulse Looping Warna Ungu Ofor.site */
+    @keyframes pulse-cta {
+        0% {
+            box-shadow: 0 0 0 0 rgba(126, 34, 206, 0.6);
+        }
+        70% {
+            box-shadow: 0 0 0 15px rgba(126, 34, 206, 0);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(126, 34, 206, 0);
+        }
     }
     </style>
 </head>
@@ -171,28 +189,33 @@
 
         <div id="card-canvas" class="{{ $desain->aspek_rasio == '16-9' ? 'ratio-16-9' : 'ratio-9-16' }}" style="{{ $bgStyle }}">
             
-            {{-- 1. Render Teks --}}
-           @foreach($desain->texts as $t)
-                <div class="design-element" style="transform: translate({{ $t->position_x }}px, {{ $t->position_y }}px) rotate({{ $t->rotation ?? 0 }}deg); width: {{ $t->width }}px; min-height: {{ $t->height }}px;  z-index: 50;">
-                    {{-- PERBAIKAN FONT: Gunakan {{ }} bukan {!! !!} agar tanda kutip font tidak merusak tag HTML --}}
+           {{-- 1. Render Teks --}}
+            @foreach($desain->texts as $t)
+                {{-- PERBAIKAN: Hapus rotate dari wrapper, ubah tinggi jadi auto --}}
+                <div class="design-element" style="transform: translate({{ $t->position_x }}px, {{ $t->position_y }}px); width: {{ $t->width }}px; height: auto; z-index: 50;">
+                    {{-- PERBAIKAN: Pindahkan rotate ke dalam text-content --}}
                     <div class="text-content" 
-                        style="font-family: {{ $t->font }} !important; color: {{ $t->color }}; font-size: {{ $t->size }}px;">{!! $t->text !!}</div>
+                        style="transform: rotate({{ $t->rotation ?? 0 }}deg); font-family: {{ $t->font }} !important; color: {{ $t->color }}; font-size: {{ $t->size }}px;">{!! $t->text !!}</div>
                 </div>
             @endforeach
             
             {{-- 2. Render Gambar --}}
             @foreach($desain->images as $img)
+            {{-- PERBAIKAN: Hapus rotate dari wrapper --}}
             <div class="design-element" 
-                 style="transform: translate({{ $img->position_x }}px, {{ $img->position_y }}px) rotate({{ $img->rotation ?? 0 }}deg); width: {{ $img->width }}px; height: {{ $img->height }}px; left: 0; top: 0; z-index: 45;">
-                <img src="{{ asset($img->image) }}" class="image-content">
+                 style="transform: translate({{ $img->position_x }}px, {{ $img->position_y }}px); width: {{ $img->width }}px; height: {{ $img->height }}px; left: 0; top: 0; z-index: 45;">
+                {{-- PERBAIKAN: Pindahkan rotate ke dalam img --}}
+                <img src="{{ asset($img->image) }}" class="image-content" style="transform: rotate({{ $img->rotation ?? 0 }}deg);">
             </div>
             @endforeach
 
             {{-- 3. Render Video --}}
             @foreach($desain->videos as $vid)
+            {{-- PERBAIKAN: Hapus rotate dari wrapper --}}
             <div class="design-element" 
-                 style="transform: translate({{ $vid->position_x }}px, {{ $vid->position_y }}px) rotate({{ $vid->rotation ?? 0 }}deg); width: {{ $vid->width }}px; height: {{ $vid->height }}px; pointer-events: auto; left: 0; top: 0; z-index: 40;">
-                <video src="{{ asset($vid->video) }}" class="video-content" controls loop muted autoplay playsinline></video>
+                 style="transform: translate({{ $vid->position_x }}px, {{ $vid->position_y }}px); width: {{ $vid->width }}px; height: {{ $vid->height }}px; pointer-events: auto; left: 0; top: 0; z-index: 40;">
+                {{-- PERBAIKAN: Pindahkan rotate ke dalam video --}}
+                <video src="{{ asset($vid->video) }}" class="video-content" style="transform: rotate({{ $vid->rotation ?? 0 }}deg);" controls loop muted autoplay playsinline></video>
             </div>
             @endforeach
 
@@ -236,14 +259,16 @@
         </div>
     </div>
     <div class="watermark-container text-center mt-5 mb-4">
-    <div class="brand-footer d-inline-flex align-items-center mb-3 px-3 py-2 rounded-pill shadow-sm bg-white border">
-        <img src="{{ asset('/logo-no-bg.png') }}" alt="Logo Ofor.site" style="height: 24px; width: auto;" class="me-2">
-        <span class="text-secondary fw-medium" style="font-size: 0.9rem;">
+    <!-- Watermark Text Saja -->
+    <div class="brand-footer mb-3">
+        <span class="text-secondary fw-medium" style="font-size: 0.9rem; text-shadow: 0 1px 2px rgba(255,255,255,0.8);">
             Dibuat dengan <strong style="color: #7e22ce;">OFOR.SITE</strong>
         </span>
     </div>
 
-    <div class="d-block"></div> <a href="{{ url('/') }}" class="btn cta-buat-kartu rounded-pill px-4 py-2 shadow-sm text-white border-0 mt-1">
+    <!-- Tombol dengan class animasi -->
+    <div class="d-block"></div> 
+    <a href="{{ url('/') }}" class="btn cta-buat-kartu rounded-pill px-4 py-2 text-white border-0 mt-1">
         <i class="bi bi-magic me-2"></i> Buat Desain Kartu Disini!
     </a>
 </div>

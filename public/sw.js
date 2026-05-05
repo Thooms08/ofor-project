@@ -1,6 +1,7 @@
-const CACHE_NAME = 'ofor-site-v1';
+const CACHE_NAME = 'ofor-site-v2';
 const ASSETS_TO_CACHE = [
     '/',
+    '/login',
     '/manifest.json',
     'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css',
     'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css',

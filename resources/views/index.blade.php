@@ -98,13 +98,16 @@
     }
 </style>
 
-<header id="heroCarousel" class="carousel slide carousel-fade hero-carousel" data-bs-ride="carousel" data-bs-interval="10000">
+<header id="heroCarousel" class="carousel slide carousel-fade hero-carousel" data-bs-ride="carousel" data-bs-interval="27000">
+    <!-- PERBAIKAN 1: Tambah indikator ke-3 -->
     <div class="carousel-indicators">
         <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
         <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
     </div>
 
     <div class="carousel-inner">
+        <!-- SLIDE 1 (gif1.gif) -->
         <div class="carousel-item active">
             <div class="container hero-slide-container">
                 <div class="row align-items-center g-5">
@@ -124,12 +127,13 @@
                         </div>
                     </div>
                     <div class="col-lg-6 text-center z-1">
-                        <img src="{{ asset('assets/gif/gif1.gif') }}" class="hero-gif" alt="Kartu Digital Interaktif Ofor.site" loading="lazy" onerror="this.src='https://via.placeholder.com/600x480/7e22ce/ffffff?text=Ofor.site';">
+                        <img src="{{ asset('/gif1.gif') }}" class="hero-gif" alt="Kartu Digital Interaktif Ofor.site" loading="lazy" onerror="this.src='https://via.placeholder.com/600x480/7e22ce/ffffff?text=Ofor.site';">
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- SLIDE 2 (gif2.gif) -->
         <div class="carousel-item">
             <div class="container hero-slide-container">
                 <div class="row align-items-center g-5">
@@ -148,11 +152,37 @@
                         </div>
                     </div>
                     <div class="col-lg-6 text-center z-1">
-                        <img src="{{ asset('assets/gif/gif2.gif') }}" class="hero-gif" alt="Kartu Ucapan Digital Unik" loading="lazy" onerror="this.src='https://via.placeholder.com/600x480/7e22ce/ffffff?text=Ofor.site';">
+                        <img src="{{ asset('/gif2.gif') }}" class="hero-gif" alt="Kartu Ucapan Digital Unik" loading="lazy" onerror="this.src='https://via.placeholder.com/600x480/7e22ce/ffffff?text=Ofor.site';">
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- PERBAIKAN 2: SLIDE 3 (gif3.gif) -->
+        <div class="carousel-item">
+            <div class="container hero-slide-container">
+                <div class="row align-items-center g-5">
+                    <div class="col-lg-6 text-center text-lg-start z-1">
+                        <span class="badge bg-white text-purple px-3 py-2 rounded-pill mb-4 shadow-sm fw-bold tracking-wide">
+                            <i class="bi bi-send-fill me-1 text-primary"></i> Mudah Dibagikan
+                        </span>
+                        <h2 class="display-4 fw-bold text-white mb-4 lh-sm">
+                            Sebarkan Momen <br class="d-none d-lg-block"> Kapan Saja, Di Mana Saja
+                        </h2>
+                        <p class="lead text-white-50 mb-5 fw-normal" style="line-height: 1.8;">
+                            Bagikan tautan kartu digital Anda ke berbagai platform media sosial atau melalui pesan instan tanpa perlu aplikasi tambahan.
+                        </p>
+                        <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center justify-content-lg-start">
+                            <a href="{{ route('register') }}" class="btn btn-light btn-lg text-purple fw-bold rounded-3 px-4 shadow py-3">Coba Gratis Sekarang</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 text-center z-1">
+                        <img src="{{ asset('/gif3.gif') }}" class="hero-gif" alt="Bagikan Kartu Digital Mudah" loading="lazy" onerror="this.src='https://via.placeholder.com/600x480/7e22ce/ffffff?text=Ofor.site';">
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </header>
 

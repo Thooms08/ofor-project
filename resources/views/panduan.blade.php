@@ -299,7 +299,7 @@
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 <div class="ratio ratio-16x9 shadow-lg rounded-4 overflow-hidden border border-4 border-white">
-                    <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID" title="YouTube video tutorial Ofor.site" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    <iframe src="https://www.youtube.com/embed/wXtedKctcSM?si=LV2Pqz25SddQ4u9O" title="YouTube video tutorial Ofor.site" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                 </div>
             </div>
         </div>
